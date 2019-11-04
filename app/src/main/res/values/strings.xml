@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">IndividualProject</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home" />
+    <string name="title_dashboard" />
+    <string name="title_notifications" />
     <string name="ble_not_supported">BLE not supported</string>
     <string name="error_bluetooth_not_supported">Bluetooth not supported</string>
     <string name="clear" />
+    <string name="unknown_device" />
 </resources>
