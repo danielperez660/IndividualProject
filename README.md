@@ -8,6 +8,9 @@ If initial interaction between the phone and the beacon is set up then there wil
 
 ## Log
 
+### 06-11-19
+* I can now detect beacons and am very proud of myself. Prototype for basic beacon entry has been created
+
 ### 30-10-19
 * Research into the use of androidstudio
 * changes to the android application which allows it to use bluetooth
