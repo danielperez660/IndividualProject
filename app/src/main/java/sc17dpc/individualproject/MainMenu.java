@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -14,15 +15,30 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import java.util.ArrayList;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.widget.Toast;
 
-public class MainMenu extends AppCompatActivity {
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.MonitorNotifier;
+import org.altbeacon.beacon.RangeNotifier;
+import org.altbeacon.beacon.Region;
+
+import java.util.Collection;
+
+public class MainMenu extends AppCompatActivity implements BeaconConsumer {
 
     private TextView mTextMessage;
+    private String tempText;
+
     private BluetoothAdapter mBluetoothAdapter;
+    protected static final String TAG = "RangingActivity";
+    private BeaconManager beaconManager;
 
     private static final int PERMISSION_REQUEST_BLUETOOTH = 1;
 
@@ -52,6 +68,13 @@ public class MainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
+        beaconManager = BeaconManager.getInstanceForApplication(this);
+
+        beaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("s:0-1=feaa,m:2-2=00,p:3-3:-41,i:4-13,i:14-19"));
+
+        beaconManager.bind(this);
+
         // Bluetooth permission stuff
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
@@ -68,7 +91,7 @@ public class MainMenu extends AppCompatActivity {
         }
 
         // Request location services
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
 
         // --------------------------------------------- Button BS ---------------------------------------------------------- //
 
@@ -77,13 +100,18 @@ public class MainMenu extends AppCompatActivity {
         Button buttonTest = findViewById(R.id.registerButton);
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mTextMessage.append("Start" + "\n");
         buttonTest.setOnClickListener(new View.OnClickListener(){
-
+            int counter = 0;
             @Override
             public void onClick(View v) {
-                // TODO: Add list of BLE devices in the range
-                    mTextMessage.append("Start" + "\n");
-                    mTextMessage.append("Done" + "\n");
+                mTextMessage.append(tempText + counter + " \n");
+                counter++;
+
+                if(counter > 5){
+                    mTextMessage.setText("");
+                    counter = 0;
+                }
             }
 
         });
@@ -130,4 +158,48 @@ public class MainMenu extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBeaconServiceConnect() {
+        final Region region = new Region("DanielBeaconNew",null, null, null);
+
+        beaconManager.addMonitorNotifier(new MonitorNotifier()  {
+
+            @Override
+            public void didEnterRegion(Region region) {
+                try {
+                    beaconManager.startRangingBeaconsInRegion(region);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void didExitRegion(Region region) {
+                try {
+                    beaconManager.stopRangingBeaconsInRegion(region);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void didDetermineStateForRegion(int state, Region region) {
+                System.out.println( "I have just switched from seeing/not seeing beacons: "+state);
+            }
+        });
+
+        beaconManager.addRangeNotifier(new RangeNotifier() {
+
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                for (Beacon b: beacons ) {
+                    mTextMessage.append(b.getBluetoothAddress() + " \n");
+                }
+            }
+        });
+
+        try {
+            beaconManager.startMonitoringBeaconsInRegion(region);
+        } catch (RemoteException e) {    }
+    }
 }
