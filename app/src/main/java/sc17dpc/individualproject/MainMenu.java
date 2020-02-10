@@ -13,10 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-import java.util.ArrayList;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -53,14 +50,15 @@ public class MainMenu extends AppCompatActivity implements BeaconConsumer {
 
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.clear);
+                    selectedFragment = new HomeFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 case R.id.navigation_status:
                     selectedFragment = new StatusFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 case R.id.navigation_notifications:
-                    selectedFragment = new StatusFragment();
+                    selectedFragment = new SearchFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
             }
@@ -72,6 +70,9 @@ public class MainMenu extends AppCompatActivity implements BeaconConsumer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        Fragment selectedFragment = new HomeFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
 
         beaconManager = BeaconManager.getInstanceForApplication(this);
 
@@ -98,28 +99,12 @@ public class MainMenu extends AppCompatActivity implements BeaconConsumer {
         // Request location services
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
 
-        // --------------------------------------------- Button BS ---------------------------------------------------------- //
-
         mTextMessage = findViewById(R.id.textView);
         BottomNavigationView navigation = findViewById(R.id.navigation);
-        Button buttonTest = findViewById(R.id.registerButton);
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mTextMessage.append("Start" + "\n");
-        buttonTest.setOnClickListener(new View.OnClickListener(){
-            int counter = 0;
-            @Override
-            public void onClick(View v) {
-                mTextMessage.append(tempText + counter + " \n");
-                counter++;
 
-                if(counter > 5){
-                    mTextMessage.setText("");
-                    counter = 0;
-                }
-            }
-
-        });
     }
 
     //Checks if on resume the application still has bluetooth
