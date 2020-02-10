@@ -19,12 +19,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="282dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"/>
     </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView
