@@ -3,7 +3,9 @@ package sc17dpc.individualproject;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.os.RemoteException;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.altbeacon.beacon.Beacon;
@@ -13,6 +15,7 @@ import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 import androidx.annotation.Nullable;
@@ -88,6 +91,7 @@ public class BeaconController extends Service implements BeaconConsumer {
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 for (Beacon b: beacons ) {
                     Log.d("HomeMade", b.getBluetoothAddress());
+                    sendBeacon(b);
                 }
             }
         });
@@ -95,6 +99,12 @@ public class BeaconController extends Service implements BeaconConsumer {
         try {
             beaconManager.startMonitoringBeaconsInRegion(region);
         } catch (RemoteException ignored) {    }
+    }
+
+    private void sendBeacon(Beacon b){
+        Intent intent = new Intent("SendBeacon");
+        intent.putExtra("message", (Serializable) b);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     @Nullable
