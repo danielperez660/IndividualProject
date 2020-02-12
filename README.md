@@ -7,6 +7,10 @@ There will be an interaction with a mobile android applciation which will have a
 If initial interaction between the phone and the beacon is set up then there will be an attempt to interact with the time logging website to log how long the worker has been in the office for.
 
 ## Log
+### 12-02-20
+* Set up inter process communication between beacon detection service
+* Data type communication needs to be specific
+
 ### 10-02-20
 * Fixed issues with androidX where app would crash on startup for no reason
 * Modularised more with fragments rather than activities as menu items
