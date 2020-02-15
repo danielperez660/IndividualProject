@@ -3,7 +3,6 @@ package sc17dpc.individualproject;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -15,7 +14,6 @@ import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import androidx.annotation.Nullable;
@@ -81,7 +79,7 @@ public class BeaconController extends Service implements BeaconConsumer {
 
             @Override
             public void didDetermineStateForRegion(int state, Region region) {
-                System.out.println( "I have just switched from seeing/not seeing beacons: "+state);
+                Log.d("HomeMade", "didDetermineStateForRegion: I have just switched from seeing/not seeing beacons: "+state);
             }
         });
 
@@ -91,7 +89,7 @@ public class BeaconController extends Service implements BeaconConsumer {
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 for (Beacon b: beacons ) {
                     Log.d("HomeMade", b.getBluetoothAddress());
-                    sendBeacon(b);
+                    sendBeacon(b.getBluetoothAddress());
                 }
             }
         });
@@ -101,9 +99,9 @@ public class BeaconController extends Service implements BeaconConsumer {
         } catch (RemoteException ignored) {    }
     }
 
-    private void sendBeacon(Beacon b){
+    private void sendBeacon(String b){
         Intent intent = new Intent("SendBeacon");
-        intent.putExtra("message", (Serializable) b);
+        intent.putExtra("message", b);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 

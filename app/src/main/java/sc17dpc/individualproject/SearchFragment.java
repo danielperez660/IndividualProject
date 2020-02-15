@@ -14,17 +14,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import org.altbeacon.beacon.Beacon;
-
-import java.io.Serializable;
-
+import java.util.ArrayList;
 
 public class SearchFragment extends Fragment {
 
-//    TODO: Add beacon searching features
-//    TODO: Change Icon so that its not shit that is unrelated
+    //    TODO: Change Icon so that its not shit that is unrelated
     private Intent intent;
+    private ArrayList<String> beacons = new ArrayList<>();
+    private TextView beaconBox;
+    private ListView beaconList;
 
     @Nullable
     @Override
@@ -33,7 +34,9 @@ public class SearchFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        Button searchButton = (Button) view.findViewById(R.id.search);
+        Button searchButton = view.findViewById(R.id.search);
+        beaconBox = view.findViewById(R.id.textView2);
+        beaconList = view.findViewById(R.id.beaconList);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,11 +53,19 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
+    private void beaconFound(String beacon) {
+        if (!beacons.contains(beacon)) {
+            beacons.add(beacon);
+            beaconBox.append(beacon + "\n");
+        }
+    }
+
     private BroadcastReceiver mBeaconReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Serializable data = intent.getStringExtra("message");
+            String data = intent.getStringExtra("message");
             Log.d("HomeMade", "Message Received " + data);
+            beaconFound(data);
         }
     };
 
@@ -62,7 +73,7 @@ public class SearchFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.d("HomeMade", "done");
-
         getActivity().stopService(intent);
+        beacons.clear();
     }
 }
