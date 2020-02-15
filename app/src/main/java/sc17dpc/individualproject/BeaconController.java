@@ -92,7 +92,7 @@ public class BeaconController extends Service implements BeaconConsumer {
                 for (Beacon b: beacons ) {
                     Log.d("HomeMade", b.getBluetoothAddress());
                     sendBeaconAddress(b.getBluetoothAddress());
-                    sendBeaconData(b);
+//                    sendBeaconData(b);
                 }
             }
         });
@@ -108,11 +108,11 @@ public class BeaconController extends Service implements BeaconConsumer {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    private void sendBeaconData(Beacon b){
-        Intent intent = new Intent("SendBeacon");
-        intent.putExtra("beacon", (Serializable) b);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
+//    private void sendBeaconData(Beacon b){
+//        Intent intent = new Intent("SendBeacon");
+//        intent.putExtra("beacon", (Serializable) b);
+//        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+//    }
 
     @Nullable
     @Override

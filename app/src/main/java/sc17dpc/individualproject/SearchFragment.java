@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import org.altbeacon.beacon.Beacon;
+
 import java.util.ArrayList;
 
 public class SearchFragment extends Fragment {
@@ -66,7 +68,12 @@ public class SearchFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String data = intent.getStringExtra("address");
+//            Bundle beacon = intent.getBundleExtra("beacon");
+//            Object test = beacon.get("id1");
+
+//            Log.d("HomeMade", "Beacon: " + test.toString());
             Log.d("HomeMade", "Message Received " + data);
+
             beaconFound(data);
         }
     };
