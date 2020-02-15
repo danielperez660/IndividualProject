@@ -14,6 +14,7 @@ import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 import androidx.annotation.Nullable;
@@ -29,6 +30,7 @@ public class BeaconController extends Service implements BeaconConsumer {
     @Override
     public void onDestroy() {
         Log.d("HomeMade", "Stopped Search for beacons" );
+        beaconManager.disableForegroundServiceScanning();
         beaconManager.unbind(this);
         mThread.interrupt();
         super.onDestroy();
@@ -89,7 +91,8 @@ public class BeaconController extends Service implements BeaconConsumer {
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 for (Beacon b: beacons ) {
                     Log.d("HomeMade", b.getBluetoothAddress());
-                    sendBeacon(b.getBluetoothAddress());
+                    sendBeaconAddress(b.getBluetoothAddress());
+                    sendBeaconData(b);
                 }
             }
         });
@@ -99,9 +102,15 @@ public class BeaconController extends Service implements BeaconConsumer {
         } catch (RemoteException ignored) {    }
     }
 
-    private void sendBeacon(String b){
+    private void sendBeaconAddress(String b){
         Intent intent = new Intent("SendBeacon");
-        intent.putExtra("message", b);
+        intent.putExtra("address", b);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void sendBeaconData(Beacon b){
+        Intent intent = new Intent("SendBeacon");
+        intent.putExtra("beacon", (Serializable) b);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
