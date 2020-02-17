@@ -2,6 +2,7 @@ package sc17dpc.individualproject;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
@@ -80,7 +81,7 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
 
             @Override
             public void didDetermineStateForRegion(int state, Region region) {
-                Log.d("HomeMade", "didDetermineStateForRegion: I have just switched from seeing/not seeing beacons: "+state);
+                Log.d("HomeMade", "didDetermineStateForRegion: I have just switched from seeing/not seeing beacons: "+region.getBluetoothAddress());
             }
         });
 
@@ -90,8 +91,7 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 for (Beacon b: beacons ) {
                     Log.d("HomeMade", b.getBluetoothAddress());
-                    sendBeaconAddress(b.getBluetoothAddress());
-//                    sendBeaconData(b);
+                    sendBeaconAddress(b);
                 }
             }
         });
@@ -101,17 +101,12 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
         } catch (RemoteException ignored) {    }
     }
 
-    private void sendBeaconAddress(String b){
+    private void sendBeaconAddress(Beacon b){
         Intent intent = new Intent("SendBeacon");
-        intent.putExtra("address", b);
+        intent.putExtra("address", b.getBluetoothAddress());
+        intent.putExtra("name", b.getBluetoothName());
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
-
-//    private void sendBeaconData(Beacon b){
-//        Intent intent = new Intent("SendBeacon");
-//        intent.putExtra("beacon", (Serializable) b);
-//        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-//    }
 
     @Nullable
     @Override

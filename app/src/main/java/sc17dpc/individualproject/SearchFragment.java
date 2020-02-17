@@ -18,8 +18,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SearchFragment extends Fragment {
 
@@ -66,7 +68,10 @@ public class SearchFragment extends Fragment {
 
                 // Starts the beacon tracking service
                 intent = new Intent(getActivity(), BeaconControllerService.class);
-                getActivity().startService(intent);
+                Objects.requireNonNull(getActivity()).startService(intent);
+
+                Toast toast = Toast.makeText(getContext(), "Searching...", Toast.LENGTH_LONG);
+                toast.show();
             }
         });
 
@@ -84,14 +89,12 @@ public class SearchFragment extends Fragment {
     private BroadcastReceiver mBeaconReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String data = intent.getStringExtra("address");
-//            Bundle beacon = intent.getBundleExtra("beacon");
-//            Object test = beacon.get("id1");
 
-//            Log.d("HomeMade", "Beacon: " + test.toString());
-            Log.d("HomeMade", "Message Received " + data);
+            String address = intent.getStringExtra("address");
+            String name = intent.getStringExtra("name");
 
-            beaconFound(data);
+            Log.d("HomeMade", "Message Received " + address);
+            beaconFound(address);
         }
     };
 

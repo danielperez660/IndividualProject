@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class BeaconRegisterActivity extends AppCompatActivity {
 
@@ -17,6 +18,12 @@ public class BeaconRegisterActivity extends AppCompatActivity {
         Button cancel = findViewById(R.id.cancel);
         TextView beaconID = findViewById(R.id.beaconID);
 
+        Bundle beacon = getIntent().getExtras();
+        assert beacon != null;
+        final String btID = beacon.getString("bluetoothID");
+        beaconID.setText(btID);
+
+        // Basic setup of return button
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -24,10 +31,17 @@ public class BeaconRegisterActivity extends AppCompatActivity {
             }
         });
 
-        Bundle beacon = getIntent().getExtras();
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RegisterNewBeacon(btID);
+            }
+        });
 
-        assert beacon != null;
-        beaconID.setText(beacon.getString("bluetoothID"));
+    }
 
+    private void RegisterNewBeacon(String ID){
+        Toast toast = Toast.makeText(getApplicationContext(), "Beacon Registered", Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
