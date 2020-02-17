@@ -10,6 +10,7 @@ If initial interaction between the phone and the beacon is set up then there wil
 ### 17-02-20
 * Changes to naming convention
 * Creation of activity for registration of beacons
+* Removed region persistance and changed the UI slightly 
 
 ### 12-02-20
 * Set up inter process communication between beacon detection service
