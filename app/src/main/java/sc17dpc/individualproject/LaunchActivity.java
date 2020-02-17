@@ -17,7 +17,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.widget.Toast;
 
-public class MainMenu extends AppCompatActivity {
+public class LaunchActivity extends AppCompatActivity {
 
     private BluetoothAdapter mBluetoothAdapter;
 

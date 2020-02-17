@@ -13,11 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-
-import org.altbeacon.beacon.Beacon;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -42,13 +42,30 @@ public class SearchFragment extends Fragment {
         adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, beacons);
         beaconList.setAdapter(adapter);
 
+        // On item selected we will launch a registering window
+        beaconList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = ((TextView) view).getText().toString();
+                Log.d("HomeMade", "Selected: " + item);
+
+                Bundle beacon = new Bundle();
+                beacon.putString("bluetoothID", item);
+
+                Intent intent = new Intent(getActivity(), BeaconRegisterActivity.class);
+                intent.putExtras(beacon);
+
+                startActivity(intent);
+            }
+        });
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("HomeMade", "Search Started");
 
                 // Starts the beacon tracking service
-                intent = new Intent(getActivity(), BeaconController.class);
+                intent = new Intent(getActivity(), BeaconControllerService.class);
                 getActivity().startService(intent);
             }
         });

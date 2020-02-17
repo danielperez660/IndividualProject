@@ -20,7 +20,7 @@ import java.util.Collection;
 import androidx.annotation.Nullable;
 
 
-public class BeaconController extends Service implements BeaconConsumer {
+public class BeaconControllerService extends Service implements BeaconConsumer {
 
     private org.altbeacon.beacon.BeaconManager beaconManager;
     private Thread mThread;
@@ -30,7 +30,6 @@ public class BeaconController extends Service implements BeaconConsumer {
     @Override
     public void onDestroy() {
         Log.d("HomeMade", "Stopped Search for beacons" );
-        beaconManager.disableForegroundServiceScanning();
         beaconManager.unbind(this);
         mThread.interrupt();
         super.onDestroy();

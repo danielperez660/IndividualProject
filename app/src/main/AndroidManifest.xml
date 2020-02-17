@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".MainMenu"
+            android:name=".LaunchActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,13 +26,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
-            android:name=".BeaconController"
+            android:name=".BeaconControllerService"
             tools:node="replace">
             <meta-data
                 android:name="longScanForcingEnabled"
                 android:value="true" />
         </service>
+
+        <activity android:name=".BeaconRegisterActivity"></activity>
     </application>
 
 </manifest>
