@@ -56,7 +56,8 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
     public void onBeaconServiceConnect() {
         final Region region = new Region("DanielBeaconNew",null, null, null);
         Log.d("HomeMade", "Searching for beacons");
-
+        
+        beaconManager.setRegionStatePersistenceEnabled(false);
         beaconManager.addMonitorNotifier(new MonitorNotifier()  {
 
             // Finds a beacon and commences to track its distance
