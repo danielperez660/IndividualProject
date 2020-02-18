@@ -7,6 +7,10 @@ There will be an interaction with a mobile android applciation which will have a
 If initial interaction between the phone and the beacon is set up then there will be an attempt to interact with the time logging website to log how long the worker has been in the office for.
 
 ## Log
+### 18-02-20
+* Made changes to database to allow us to collect and insert databases
+* Changed the status fragment to represent beacons we registered (TEMP)
+
 ### 17-02-20
 * Changes to naming convention
 * Creation of activity for registration of beacons
