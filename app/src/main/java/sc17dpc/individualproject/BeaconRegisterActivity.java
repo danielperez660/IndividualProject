@@ -8,10 +8,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class BeaconRegisterActivity extends AppCompatActivity {
+    DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbHelper = DatabaseHelper.getInstance(getApplicationContext());
+
         setContentView(R.layout.activity_beacon_register);
 
         Button register = findViewById(R.id.register);
@@ -43,5 +46,14 @@ public class BeaconRegisterActivity extends AppCompatActivity {
     private void RegisterNewBeacon(String ID){
         Toast toast = Toast.makeText(getApplicationContext(), "Beacon Registered", Toast.LENGTH_SHORT);
         toast.show();
+        BeaconEntry newRegister = new BeaconEntry();
+
+        newRegister.beaconName = "TEST";
+        newRegister.beaconID = ID;
+        newRegister.position = "inside";
+
+        dbHelper.addEntry(newRegister);
+
+        finish();
     }
 }

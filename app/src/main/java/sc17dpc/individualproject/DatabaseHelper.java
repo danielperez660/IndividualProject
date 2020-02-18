@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper sInstance;
 
     private static final String DATABASE_NAME = "beaconsRegistered";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
 
     private static final String TABLE_BEACONS = "beacons";
@@ -41,10 +40,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createBeaconTable = "CREATE TABLE " + TABLE_BEACONS +
-                "(" + KEY_BEACONS_BLUETOOTH_ID + "TEXT,"
-                + KEY_BEACONS_NAME + "TEXT,"
-                + KEY_BEACONS_POSITION + "TEXT" + ")";
+                "(" + KEY_BEACONS_BLUETOOTH_ID + " TEXT,"
+                + KEY_BEACONS_NAME + " TEXT,"
+                + KEY_BEACONS_POSITION + " TEXT" + ")";
         db.execSQL(createBeaconTable);
+        Log.d("DataBaseNew", "DB Created");
+
     }
 
     @Override
@@ -64,6 +65,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_BEACONS, null, values);
+
+        Log.d("DataBaseNew", "Beacon Added: " + beacon.getBeaconID());
+
         db.close();
     }
 
@@ -73,6 +77,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
+
+        Log.d("DataBaseNew", "Attempting to fetch all: " + cursor.getColumnNames()[0] +cursor.getColumnNames()[1] + cursor.getColumnNames()[2]);
 
         if(cursor.moveToFirst()){
             while(!cursor.isAfterLast()) {
@@ -86,7 +92,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.moveToNext();
             }
         }
-
+        cursor.close();
+        db.close();
         return beacons;
     }
 
@@ -104,7 +111,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             beacon.position = cursor.getString(cursor.getColumnIndex(KEY_BEACONS_POSITION));
         }
 
-        Log.d("HomeMade", beacon.getBeaconID() + " " + beacon.getBeaconName());
+        Log.d("DataBaseNew", beacon.getBeaconID() + " " + beacon.getBeaconName());
+        cursor.close();
+        db.close();
 
         return beacon;
     }

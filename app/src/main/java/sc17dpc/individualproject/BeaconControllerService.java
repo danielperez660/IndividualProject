@@ -2,7 +2,6 @@ package sc17dpc.individualproject;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
@@ -15,7 +14,6 @@ import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import androidx.annotation.Nullable;
