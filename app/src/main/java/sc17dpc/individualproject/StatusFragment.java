@@ -27,7 +27,7 @@ public class StatusFragment extends Fragment {
 
         for (BeaconEntry i : ((DatabaseHelper) dbHelper).getAllEntries()) {
             String id = i.getBeaconID() + "\n";
-            current.setText(id);
+            current.append(id);
         }
 
         return view;
