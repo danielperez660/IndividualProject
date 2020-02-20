@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class StatusFragment extends Fragment {
+public class BeaconManagerFragment extends Fragment {
 
     SQLiteOpenHelper dbHelper;
 
@@ -20,7 +20,7 @@ public class StatusFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d("HomeMade", "Status");
 
-        View view = inflater.inflate(R.layout.fragment_status, container, false);
+        View view = inflater.inflate(R.layout.fragment_beacon_manage, container, false);
         TextView current = view.findViewById(R.id.registered_beacons);
 
         dbHelper = DatabaseHelper.getInstance(getContext());

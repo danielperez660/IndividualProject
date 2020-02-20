@@ -33,11 +33,11 @@ public class LaunchActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    selectedFragment = new HomeFragment();
+                    selectedFragment = new BeaconManagerFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 case R.id.navigation_status:
-                    selectedFragment = new StatusFragment();
+                    selectedFragment = new HomeFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 case R.id.navigation_notifications:
@@ -77,6 +77,9 @@ public class LaunchActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        navigation.getMenu().getItem(0).setChecked(false);
+        navigation.getMenu().getItem(1).setChecked(true);
     }
 
     //Checks if on resume the application still has bluetooth
