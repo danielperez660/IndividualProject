@@ -16,7 +16,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper sInstance;
 
     private static final String DATABASE_NAME = "beaconsRegistered";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
 
 
     private static final String TABLE_BEACONS = "beacons";
@@ -57,18 +57,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void addEntry(BeaconEntry beacon) {
+    public Boolean addEntry(BeaconEntry beacon) {
         ContentValues values = new ContentValues();
         values.put(KEY_BEACONS_BLUETOOTH_ID, beacon.getBeaconID());
         values.put(KEY_BEACONS_NAME, beacon.getBeaconName());
         values.put(KEY_BEACONS_POSITION, beacon.getPosition());
 
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.insert(TABLE_BEACONS, null, values);
+        if(getEntry(beacon.getBeaconID()).getBeaconID() == null){
+            SQLiteDatabase db = this.getWritableDatabase();
 
-        Log.d("DataBaseNew", "Beacon Added: " + beacon.getBeaconID());
+            db.insert(TABLE_BEACONS, null, values);
+            Log.d("DataBaseNew", "Beacon Added: " + beacon.getBeaconID());
+            db.close();
+        }else{
+            return false;
+        }
 
-        db.close();
+        return true;
     }
 
     public List<BeaconEntry> getAllEntries() {
@@ -77,8 +82,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-
-        Log.d("DataBaseNew", "Attempting to fetch all: " + cursor.getColumnNames()[0] +cursor.getColumnNames()[1] + cursor.getColumnNames()[2]);
 
         if(cursor.moveToFirst()){
             while(!cursor.isAfterLast()) {

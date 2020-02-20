@@ -25,9 +25,9 @@ import java.util.Objects;
 
 public class SearchFragment extends Fragment {
 
-    //    TODO: Change Icon so that its not shit that is unrelated
     private Intent intent;
-    private ArrayList<String> beacons = new ArrayList<>();
+    private ArrayList<String> beacons;
+    private ArrayList<BeaconEntry> beaconsFull;
     private ListView beaconList;
     private ArrayAdapter adapter;
 
@@ -39,7 +39,11 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         Button searchButton = view.findViewById(R.id.search);
+        Button stopSearchButton = view.findViewById(R.id.stopSearch);
         beaconList = view.findViewById(R.id.beaconList);
+
+        beacons = new ArrayList<>();
+        beaconsFull = new ArrayList<>();
 
         adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, beacons);
         beaconList.setAdapter(adapter);
@@ -50,14 +54,30 @@ public class SearchFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = ((TextView) view).getText().toString();
                 Log.d("HomeMade", "Selected: " + item);
-
                 Bundle beacon = new Bundle();
-                beacon.putString("bluetoothID", item);
+                BeaconEntry beaconEntry = new BeaconEntry();
+
+                for(BeaconEntry i : beaconsFull){
+                    if(i.getBeaconID().equals(item)){
+                        beaconEntry = i;
+                    }
+                }
+
+                beacon.putString("bluetoothID", beaconEntry.getBeaconID());
+                beacon.putString("bluetoothName", beaconEntry.getBeaconName());
+                beacon.putString("bluetoothPos", beaconEntry.getPosition());
 
                 Intent intent = new Intent(getActivity(), BeaconRegisterActivity.class);
                 intent.putExtras(beacon);
 
                 startActivity(intent);
+            }
+        });
+
+        stopSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopService();
             }
         });
 
@@ -79,9 +99,10 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-    private void beaconFound(String beacon) {
-        if (!beacons.contains(beacon)) {
-            beacons.add(beacon);
+    private void beaconFound(BeaconEntry beacon) {
+        if (!beacons.contains(beacon.getBeaconID())) {
+            beaconsFull.add(beacon);
+            beacons.add(beacon.getBeaconID());
             adapter.notifyDataSetChanged();
         }
     }
@@ -89,22 +110,28 @@ public class SearchFragment extends Fragment {
     private BroadcastReceiver mBeaconReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            BeaconEntry newBeacon = new BeaconEntry();
 
             String address = intent.getStringExtra("address");
             String name = intent.getStringExtra("name");
 
+            newBeacon.beaconID = address;
+            newBeacon.beaconName = name;
+
             Log.d("HomeMade", "Message Received " + address);
-            beaconFound(address);
+            beaconFound(newBeacon);
         }
     };
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d("HomeMade", "done");
+        stopService();
+    }
+
+    private void stopService(){
         try{
             getActivity().stopService(intent);
-            beacons.clear();
         }catch (Exception ignored) {
         }
     }

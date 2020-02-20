@@ -19,12 +19,18 @@ public class BeaconRegisterActivity extends AppCompatActivity {
 
         Button register = findViewById(R.id.register);
         Button cancel = findViewById(R.id.cancel);
+
         TextView beaconID = findViewById(R.id.beaconID);
+        TextView beaconName = findViewById(R.id.beaconName);
 
         Bundle beacon = getIntent().getExtras();
         assert beacon != null;
+
         final String btID = beacon.getString("bluetoothID");
         beaconID.setText(btID);
+
+        final String btName = beacon.getString("bluetoothName");
+        beaconName.setText(btName);
 
         // Basic setup of return button
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -37,22 +43,24 @@ public class BeaconRegisterActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RegisterNewBeacon(btID);
+                RegisterNewBeacon(btID, btName);
             }
         });
 
     }
 
-    private void RegisterNewBeacon(String ID){
-        Toast toast = Toast.makeText(getApplicationContext(), "Beacon Registered", Toast.LENGTH_SHORT);
-        toast.show();
+    private void RegisterNewBeacon(String ID, String Name){
         BeaconEntry newRegister = new BeaconEntry();
 
-        newRegister.beaconName = "TEST";
+        newRegister.beaconName = Name;
         newRegister.beaconID = ID;
         newRegister.position = "inside";
 
-        dbHelper.addEntry(newRegister);
+        if(!dbHelper.addEntry(newRegister)){
+            Toast.makeText(getApplicationContext(), "Beacon Already Registered", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getApplicationContext(), "Beacon Registered", Toast.LENGTH_SHORT).show();
+        }
 
         finish();
     }
