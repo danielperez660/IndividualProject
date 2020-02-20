@@ -102,7 +102,10 @@ public class SearchFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Log.d("HomeMade", "done");
-        getActivity().stopService(intent);
-        beacons.clear();
+        try{
+            getActivity().stopService(intent);
+            beacons.clear();
+        }catch (Exception ignored) {
+        }
     }
 }
