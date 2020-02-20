@@ -10,6 +10,8 @@ If initial interaction between the phone and the beacon is set up then there wil
 ### 20-02-20
 * Fixed info retrieval
 * Changed some database shit
+* added images for in/out of office
+* changed around home and status. replaced status for beaconManager
 
 ### 18-02-20
 * Made changes to database to allow us to collect and insert databases
