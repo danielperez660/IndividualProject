@@ -23,6 +23,7 @@ public class BeaconManagerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_beacon_manage, container, false);
         TextView current = view.findViewById(R.id.registered_beacons);
 
+
         dbHelper = DatabaseHelper.getInstance(getContext());
 
         for (BeaconEntry i : ((DatabaseHelper) dbHelper).getAllEntries()) {

@@ -19,10 +19,10 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\Daniel\Desktop\Coursework\Year 3\Personal Project\Image_assets\redTeam.png" />
-                                      <entry key="outputName" value="ic_red_team" />
+                                      <entry key="imageAsset" value="C:\Users\Daniel\Desktop\Coursework\Year 3\Personal Project\Image_assets\green_team.png" />
+                                      <entry key="outputName" value="ic_green_team" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="e50010" />
+                                      <entry key="themeColor" value="0ee500" />
                                     </map>
                                   </option>
                                 </PersistentState>
