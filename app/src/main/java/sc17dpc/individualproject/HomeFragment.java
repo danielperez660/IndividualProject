@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +14,7 @@ public class HomeFragment extends Fragment {
 
     private TextView status;
     private ImageView statusImage;
+
 
     @android.support.annotation.Nullable
     @Override
