@@ -7,6 +7,9 @@ There will be an interaction with a mobile android applciation which will have a
 If initial interaction between the phone and the beacon is set up then there will be an attempt to interact with the time logging website to log how long the worker has been in the office for.
 
 ## Log
+### 22-02-20
+* Tried to modify how the image is set so that its SVG and not PNG. Failed miserably.
+
 ### 20-02-20
 * Fixed info retrieval
 * Changed some database shit
