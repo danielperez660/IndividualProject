@@ -6,30 +6,30 @@ public class BeaconIconObject {
     private ImageView icon;
     private BeaconEntry beacon;
 
-    private int[] coords = new int[2];
+    private float[] coords = new float[2];
 
-    public void setBeacon(BeaconEntry b){
-        beacon = b;
+    public void setBeacon(BeaconEntry b) {
+        this.beacon = b;
     }
 
-    public void setImage(ImageView i){
-        icon = i;
+    public void setImage(ImageView i) {
+        this.icon = i;
     }
 
-    public BeaconEntry getBeacon(){
+    public BeaconEntry getBeacon() {
         return beacon;
     }
 
-    public ImageView getIcon(){
+    public ImageView getIcon() {
         return icon;
     }
 
-    public void setCoords(int x, int y) {
-        coords[0] = x;
-        coords[1] = y;
+    public void setCoords(float x, float y) {
+        this.coords[0] = x;
+        this.coords[1] = y;
     }
 
-    public int[] getCoords(){
+    public float[] getCoords() {
         return coords;
     }
 }

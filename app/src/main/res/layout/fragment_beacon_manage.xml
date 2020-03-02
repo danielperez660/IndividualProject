@@ -6,14 +6,14 @@
 
     <ImageView
         android:id="@+id/EntryView"
-        android:layout_width="337dp"
-        android:layout_height="342dp"
+        android:layout_width="match_parent"
+        android:layout_height="355dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="29dp"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="18dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginBottom="103dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,11 +78,22 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="Remove Beacon"
+            android:text="Clear Beacons"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/AddButton"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="135dp"
+        android:text="Entrance"
+        android:textColor="@android:color/background_dark"
+        android:textStyle="bold" />
 
 </RelativeLayout >

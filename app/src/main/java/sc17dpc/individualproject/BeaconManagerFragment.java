@@ -1,14 +1,15 @@
 package sc17dpc.individualproject;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -18,17 +19,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import static java.lang.String.valueOf;
-
 public class BeaconManagerFragment extends Fragment {
 
     SQLiteOpenHelper dbHelper;
-    ArrayList<BeaconIconObject> beacons;
+    ArrayList<BeaconIconObject> beaconIcons;
+    ArrayList<BeaconEntry> beacons;
     View view;
     ImageView map;
 
@@ -39,17 +38,34 @@ public class BeaconManagerFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_beacon_manage, container, false);
 
+        dbHelper = DatabaseHelper.getInstance(getContext());
+
         final Button addButton = view.findViewById(R.id.AddButton);
         Button removeButton = view.findViewById(R.id.RemoveButton);
 
+        beaconIcons = new ArrayList<>();
         beacons = new ArrayList<>();
+
         map = view.findViewById(R.id.EntryView);
 
         map.setOnDragListener(onDrag());
 
+
+        for (BeaconEntry i : ((DatabaseHelper) dbHelper).getAllEntries()) {
+            String id = i.getBeaconID() + "\n";
+            beacons.add(i);
+        }
+
         addButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public void onClick(View v) {
+
+                if(beaconIcons.size() == beacons.size()){
+                    Toast.makeText(getActivity(), "No more registered beacons", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 ImageView newImage = new ImageView(getActivity());
 
                 RelativeLayout.LayoutParams layouP = new RelativeLayout.LayoutParams(56, 56);
@@ -67,21 +83,27 @@ public class BeaconManagerFragment extends Fragment {
                 newIcon.setImage(newImage);
                 newIcon.setCoords(newImage.getLeft(), newImage.getTop());
 
-                beacons.add(newIcon);
+                beaconIcons.add(newIcon);
 
                 newImage.setOnTouchListener(onTouch());
             }
         });
 
-//        TextView current = view.findViewById(R.id.registered_beacons);
-//
-//
-//        dbHelper = DatabaseHelper.getInstance(getContext());
-//
-//        for (BeaconEntry i : ((DatabaseHelper) dbHelper).getAllEntries()) {
-//            String id = i.getBeaconID() + "\n";
-//            current.append(id);
-//        }
+
+        removeButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                for(BeaconIconObject b : beaconIcons){
+                    ImageView temp = b.getIcon();
+                    temp.setVisibility(View.GONE);
+
+                    b.setImage(temp);
+                }
+
+                beaconIcons.clear();
+            }
+        });
 
         return view;
     }
@@ -114,11 +136,6 @@ public class BeaconManagerFragment extends Fragment {
 
                 switch (event.getAction()) {
 
-                    //signal for the start of a drag and drop operation.
-                    case DragEvent.ACTION_DRAG_STARTED:
-
-                        break;
-
                     //the drag point has entered the bounding box of the View
                     case DragEvent.ACTION_DRAG_ENTERED:
                         inside = true;
@@ -132,10 +149,19 @@ public class BeaconManagerFragment extends Fragment {
                     //drag shadow has been released,the drag point is within the bounding box of the View
                     case DragEvent.ACTION_DROP:
                         if (inside) {
-                            Log.d("ImageMove", valueOf( event.getX()));
-                        }
+                            ImageView currentBeacon = (ImageView) event.getLocalState();
 
-                        Toast.makeText(getActivity(), "Drag dropped", Toast.LENGTH_SHORT).show();
+                            if(currentBeacon != null){
+                                currentBeacon.setY(event.getY());
+                                currentBeacon.setX(event.getX());
+
+                                for(BeaconIconObject b : beaconIcons){
+                                    if(b.getIcon() == currentBeacon){
+                                        b.setCoords(event.getX(), event.getY());
+                                    }
+                                }
+                            }
+                        }
                         break;
 
                     //the drag and drop operation has concluded.
