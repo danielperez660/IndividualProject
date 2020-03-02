@@ -25,16 +25,24 @@ public class HomeFragment extends Fragment {
         status = view.findViewById(R.id.statusText);
         statusImage = view.findViewById(R.id.statusImage);
 
+        statusImage.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                setInOffice();
+            }
+        });
+
         return view;
     }
 
     public void setInOffice(){
-        statusImage.setImageResource(R.drawable.ic_green_team);
+        statusImage.setImageResource(R.drawable.ic_in);
         status.setText("Status: In Office");
     }
 
     public void setOutOfOffice(){
-        statusImage.setImageResource(R.drawable.ic_red_team);
+        statusImage.setImageResource(R.drawable.ic_logout);
         status.setText("Status: Not in Office");
 
     }

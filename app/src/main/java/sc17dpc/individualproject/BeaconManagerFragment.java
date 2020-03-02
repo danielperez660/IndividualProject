@@ -21,15 +21,15 @@ public class BeaconManagerFragment extends Fragment {
         Log.d("HomeMade", "Status");
 
         View view = inflater.inflate(R.layout.fragment_beacon_manage, container, false);
-        TextView current = view.findViewById(R.id.registered_beacons);
-
-
-        dbHelper = DatabaseHelper.getInstance(getContext());
-
-        for (BeaconEntry i : ((DatabaseHelper) dbHelper).getAllEntries()) {
-            String id = i.getBeaconID() + "\n";
-            current.append(id);
-        }
+//        TextView current = view.findViewById(R.id.registered_beacons);
+//
+//
+//        dbHelper = DatabaseHelper.getInstance(getContext());
+//
+//        for (BeaconEntry i : ((DatabaseHelper) dbHelper).getAllEntries()) {
+//            String id = i.getBeaconID() + "\n";
+//            current.append(id);
+//        }
 
         return view;
     }
