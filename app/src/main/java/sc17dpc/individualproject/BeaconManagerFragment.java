@@ -132,8 +132,6 @@ public class BeaconManagerFragment extends Fragment {
             public boolean onDrag(View v, DragEvent event) {
                 boolean inside = true;
 
-//                ImageView dragged = view.findViewById(R.id.)
-
                 switch (event.getAction()) {
 
                     //the drag point has entered the bounding box of the View
