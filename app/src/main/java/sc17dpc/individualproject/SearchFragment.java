@@ -115,8 +115,8 @@ public class SearchFragment extends Fragment {
             String address = intent.getStringExtra("address");
             String name = intent.getStringExtra("name");
 
-            newBeacon.beaconID = address;
-            newBeacon.beaconName = name;
+            newBeacon.setBeaconID(address);
+            newBeacon.setBeaconName(name);
 
             Log.d("HomeMade", "Message Received " + address);
             beaconFound(newBeacon);

@@ -80,7 +80,7 @@ public class BeaconManagerFragment extends Fragment {
 
                 BeaconIconObject newIcon = new BeaconIconObject();
 
-                newIcon.setImage(newImage);
+                newIcon.setIcon(newImage);
                 newIcon.setCoords(newImage.getLeft(), newImage.getTop());
 
                 beaconIcons.add(newIcon);
@@ -98,7 +98,7 @@ public class BeaconManagerFragment extends Fragment {
                     ImageView temp = b.getIcon();
                     temp.setVisibility(View.GONE);
 
-                    b.setImage(temp);
+                    b.setIcon(temp);
                 }
 
                 beaconIcons.clear();

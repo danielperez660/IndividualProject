@@ -12,7 +12,7 @@ public class BeaconIconObject {
         this.beacon = b;
     }
 
-    public void setImage(ImageView i) {
+    public void setIcon(ImageView i) {
         this.icon = i;
     }
 
