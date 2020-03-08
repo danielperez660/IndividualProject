@@ -68,7 +68,7 @@ public class BeaconManagerFragment extends Fragment {
 
                 ImageView newImage = new ImageView(getActivity());
 
-                RelativeLayout.LayoutParams layouP = new RelativeLayout.LayoutParams(56, 56);
+                RelativeLayout.LayoutParams layouP = new RelativeLayout.LayoutParams(128, 128);
                 layouP.addRule(RelativeLayout.CENTER_IN_PARENT);
 
                 newImage.setLayoutParams(layouP);

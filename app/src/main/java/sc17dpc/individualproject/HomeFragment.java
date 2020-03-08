@@ -14,6 +14,7 @@ public class HomeFragment extends Fragment {
 
     private TextView status;
     private ImageView statusImage;
+    private boolean status_test;
 
 
     @android.support.annotation.Nullable
@@ -24,12 +25,17 @@ public class HomeFragment extends Fragment {
 
         status = view.findViewById(R.id.statusText);
         statusImage = view.findViewById(R.id.statusImage);
+        status_test = false;
 
         statusImage.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                setInOffice();
+                if (status_test){
+                    setOutOfOffice();
+                }else{
+                    setInOffice();
+                }
             }
         });
 
@@ -39,11 +45,12 @@ public class HomeFragment extends Fragment {
     public void setInOffice(){
         statusImage.setImageResource(R.drawable.ic_in);
         status.setText("Status: In Office");
+        status_test = true;
     }
 
     public void setOutOfOffice(){
         statusImage.setImageResource(R.drawable.ic_logout);
         status.setText("Status: Not in Office");
-
+        status_test = false;
     }
 }
