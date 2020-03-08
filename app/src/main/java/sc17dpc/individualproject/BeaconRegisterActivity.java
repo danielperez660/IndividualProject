@@ -52,9 +52,9 @@ public class BeaconRegisterActivity extends AppCompatActivity {
     private void RegisterNewBeacon(String ID, String Name){
         BeaconEntry newRegister = new BeaconEntry();
 
-        newRegister.beaconName = Name;
-        newRegister.beaconID = ID;
-        newRegister.position = "inside";
+        newRegister.setBeaconName(Name);
+        newRegister.setBeaconID(ID);
+        newRegister.setPosition(null);
 
         if(!dbHelper.addEntry(newRegister)){
             Toast.makeText(getApplicationContext(), "Beacon Already Registered", Toast.LENGTH_SHORT).show();

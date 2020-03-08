@@ -87,9 +87,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             while(!cursor.isAfterLast()) {
                 BeaconEntry newBeacon = new BeaconEntry();
 
-                newBeacon.beaconID = cursor.getString(cursor.getColumnIndex(KEY_BEACONS_BLUETOOTH_ID));
-                newBeacon.beaconName = cursor.getString(cursor.getColumnIndex(KEY_BEACONS_NAME));
-                newBeacon.position = cursor.getString(cursor.getColumnIndex(KEY_BEACONS_POSITION));
+                newBeacon.setBeaconID(cursor.getString(cursor.getColumnIndex(KEY_BEACONS_BLUETOOTH_ID)));
+                newBeacon.setBeaconName(cursor.getString(cursor.getColumnIndex(KEY_BEACONS_NAME)));
+                newBeacon.setPosition(cursor.getString(cursor.getColumnIndex(KEY_BEACONS_POSITION)));
 
                 beacons.add(newBeacon);
                 cursor.moveToNext();
@@ -109,9 +109,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
 
         if(cursor.moveToFirst()){
-            beacon.beaconID = cursor.getString(cursor.getColumnIndex(KEY_BEACONS_BLUETOOTH_ID));
-            beacon.beaconName = cursor.getString(cursor.getColumnIndex(KEY_BEACONS_NAME));
-            beacon.position = cursor.getString(cursor.getColumnIndex(KEY_BEACONS_POSITION));
+            beacon.setBeaconID(cursor.getString(cursor.getColumnIndex(KEY_BEACONS_BLUETOOTH_ID)));
+            beacon.setBeaconName(cursor.getString(cursor.getColumnIndex(KEY_BEACONS_NAME)));
+            beacon.setPosition(cursor.getString(cursor.getColumnIndex(KEY_BEACONS_POSITION)));
         }
 
         Log.d("DataBaseNew", beacon.getBeaconID() + " " + beacon.getBeaconName());
