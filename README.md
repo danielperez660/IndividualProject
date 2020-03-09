@@ -7,6 +7,9 @@ There will be an interaction with a mobile android application which will have a
 If initial interaction between the phone and the beacon is set up then there will be an attempt to interact with the time logging website to log how long the worker has been in the office for.
 
 ## Log
+### 09-03-20
+* added slack interaction after finally finding library that worked
+
 ### 08-03-20
 * Made slight changes to icon sizes and added some testing things
 

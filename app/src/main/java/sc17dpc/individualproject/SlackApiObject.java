@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class SlackApiObject {
 
-    private String url = "https://hooks.slack.com/services/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";
+    private String url = "https://hooks.slack.com/services/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";
     private Slack slack = Slack.getInstance();
     private String text;
 
