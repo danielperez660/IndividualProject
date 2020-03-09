@@ -9,6 +9,9 @@ If initial interaction between the phone and the beacon is set up then there wil
 ## Log
 ### 09-03-20
 * added slack interaction after finally finding library that worked
+* added DB entries for the position of beacon icons
+* added dialogue to assign the new beacon
+* Need to add way of not letting same beacon get added twice
 
 ### 08-03-20
 * Made slight changes to icon sizes and added some testing things

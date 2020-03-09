@@ -20,10 +20,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     private static final String TABLE_BEACONS = "beacons";
+    private static final String TABLE_BEACON_IMAGES = "beaconImages";
 
     private static final String KEY_BEACONS_BLUETOOTH_ID = "ID";
     private static final String KEY_BEACONS_NAME = "name";
-    private static final String KEY_BEACONS_POSITION = "position";
+
+    private static final String KEY_BEACON_ICON_BLUETOOTH_ID = "ID";
+    private static final String KEY_BEACON_IMAGES_X = "x_coord";
+    private static final String KEY_BEACON_IMAGES_Y = "y_coord";
 
 
     public static synchronized DatabaseHelper getInstance(Context context) {
@@ -41,9 +45,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String createBeaconTable = "CREATE TABLE " + TABLE_BEACONS +
                 "(" + KEY_BEACONS_BLUETOOTH_ID + " TEXT,"
-                + KEY_BEACONS_NAME + " TEXT,"
-                + KEY_BEACONS_POSITION + " TEXT" + ")";
+                + KEY_BEACONS_NAME + " TEXT" + ")";
+
+        String createBeaconImageTable = "CREATE TABLE " + TABLE_BEACON_IMAGES +
+                "(" + KEY_BEACON_IMAGES_X + " FLOAT,"
+                + KEY_BEACON_ICON_BLUETOOTH_ID + " TEXT,"
+                + KEY_BEACON_IMAGES_Y + " FLOAT" + ")";
+
         db.execSQL(createBeaconTable);
+        db.execSQL(createBeaconImageTable);
+
         Log.d("DataBaseNew", "DB Created");
 
     }
@@ -61,15 +72,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_BEACONS_BLUETOOTH_ID, beacon.getBeaconID());
         values.put(KEY_BEACONS_NAME, beacon.getBeaconName());
-        values.put(KEY_BEACONS_POSITION, beacon.getPosition());
 
-        if(getEntry(beacon.getBeaconID()).getBeaconID() == null){
+        if (getEntry(beacon.getBeaconID()).getBeaconID() == null) {
             SQLiteDatabase db = this.getWritableDatabase();
 
             db.insert(TABLE_BEACONS, null, values);
             Log.d("DataBaseNew", "Beacon Added: " + beacon.getBeaconID());
             db.close();
-        }else{
+        } else {
             return false;
         }
 
@@ -83,13 +93,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        if(cursor.moveToFirst()){
-            while(!cursor.isAfterLast()) {
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
                 BeaconEntry newBeacon = new BeaconEntry();
 
                 newBeacon.setBeaconID(cursor.getString(cursor.getColumnIndex(KEY_BEACONS_BLUETOOTH_ID)));
                 newBeacon.setBeaconName(cursor.getString(cursor.getColumnIndex(KEY_BEACONS_NAME)));
-                newBeacon.setPosition(cursor.getString(cursor.getColumnIndex(KEY_BEACONS_POSITION)));
 
                 beacons.add(newBeacon);
                 cursor.moveToNext();
@@ -108,10 +117,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(query, null);
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             beacon.setBeaconID(cursor.getString(cursor.getColumnIndex(KEY_BEACONS_BLUETOOTH_ID)));
             beacon.setBeaconName(cursor.getString(cursor.getColumnIndex(KEY_BEACONS_NAME)));
-            beacon.setPosition(cursor.getString(cursor.getColumnIndex(KEY_BEACONS_POSITION)));
         }
 
         Log.d("DataBaseNew", beacon.getBeaconID() + " " + beacon.getBeaconName());
@@ -119,5 +127,51 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return beacon;
+    }
+
+    public List<BeaconIconObject> getAllIcons() {
+        List<BeaconIconObject> beacons = new ArrayList<>();
+
+        String query = "SELECT * FROM " + TABLE_BEACON_IMAGES;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                BeaconIconObject newBeacon = new BeaconIconObject();
+                String ID = cursor.getString(cursor.getColumnIndex(KEY_BEACON_ICON_BLUETOOTH_ID));
+                BeaconEntry beacon = getEntry(ID);
+
+                float x = cursor.getInt(cursor.getColumnIndex(KEY_BEACON_IMAGES_X));
+                float y = cursor.getInt(cursor.getColumnIndex(KEY_BEACON_IMAGES_Y));
+
+                newBeacon.setBeacon(beacon);
+                newBeacon.setIcon(null);
+                newBeacon.setCoords(x, y);
+
+                beacons.add(newBeacon);
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+
+        return beacons;
+    }
+
+    public void updateIcon(BeaconIconObject icon) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String ID = icon.getBeacon().getBeaconID();
+        float x = icon.getCoords()[0];
+        float y = icon.getCoords()[1];
+
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_BEACON_ICON_BLUETOOTH_ID, ID);
+        cv.put(KEY_BEACON_IMAGES_X, x);
+        cv.put(KEY_BEACON_IMAGES_Y, y);
+
+        db.update(TABLE_BEACON_IMAGES, cv, KEY_BEACON_ICON_BLUETOOTH_ID + " = " + ID, null);
     }
 }

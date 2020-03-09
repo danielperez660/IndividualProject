@@ -1,15 +1,17 @@
 package sc17dpc.individualproject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipDescription;
+import android.content.Intent;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -61,40 +63,26 @@ public class BeaconManagerFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if(beaconIcons.size() == beacons.size()){
+                if (beaconIcons.size() == beacons.size()) {
                     Toast.makeText(getActivity(), "No more registered beacons", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                ImageView newImage = new ImageView(getActivity());
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
 
-                RelativeLayout.LayoutParams layouP = new RelativeLayout.LayoutParams(128, 128);
-                layouP.addRule(RelativeLayout.CENTER_IN_PARENT);
-
-                newImage.setLayoutParams(layouP);
-                newImage.setImageResource(R.drawable.ic_bluetooth);
-                newImage.setTag("Beacon Object");
-
-                ((ViewGroup) view).addView(newImage);
-
-
-                BeaconIconObject newIcon = new BeaconIconObject();
-
-                newIcon.setIcon(newImage);
-                newIcon.setCoords(newImage.getLeft(), newImage.getTop());
-
-                beaconIcons.add(newIcon);
-
-                newImage.setOnTouchListener(onTouch());
+                BeaconManagementDialogFragment df = BeaconManagementDialogFragment.newInstance(beacons);
+                df.setTargetFragment(BeaconManagerFragment.this, 111);
+                df.show(ft, "dialog");
             }
         });
 
 
-        removeButton.setOnClickListener(new View.OnClickListener(){
+        removeButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                for(BeaconIconObject b : beaconIcons){
+                for (BeaconIconObject b : beaconIcons) {
                     ImageView temp = b.getIcon();
                     temp.setVisibility(View.GONE);
 
@@ -106,6 +94,49 @@ public class BeaconManagerFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 111:
+                if (resultCode == Activity.RESULT_OK) {
+                    if (data != null) {
+                        createNewIcon(data.getStringExtra("beaconID"));
+                    }
+                }
+                break;
+        }
+    }
+
+    private void createNewIcon(String id) {
+
+        ImageView newImage = new ImageView(getActivity());
+
+        RelativeLayout.LayoutParams layouP = new RelativeLayout.LayoutParams(128, 128);
+        layouP.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+        newImage.setLayoutParams(layouP);
+        newImage.setImageResource(R.drawable.ic_bluetooth);
+        newImage.setTag("Beacon Object");
+
+        ((ViewGroup) view).addView(newImage);
+
+        BeaconIconObject newIcon = new BeaconIconObject();
+
+        for(BeaconEntry b : beacons){
+            if(b.getBeaconID().equals(id)){
+                newIcon.setBeacon(b);
+                Log.d("Added: " , b.getBeaconID());
+            }
+        }
+
+        newIcon.setIcon(newImage);
+        newIcon.setCoords(newImage.getLeft(), newImage.getTop());
+
+        beaconIcons.add(newIcon);
+
+        newImage.setOnTouchListener(onTouch());
     }
 
     private View.OnTouchListener onTouch() {
@@ -149,12 +180,12 @@ public class BeaconManagerFragment extends Fragment {
                         if (inside) {
                             ImageView currentBeacon = (ImageView) event.getLocalState();
 
-                            if(currentBeacon != null){
+                            if (currentBeacon != null) {
                                 currentBeacon.setY(event.getY());
                                 currentBeacon.setX(event.getX());
 
-                                for(BeaconIconObject b : beaconIcons){
-                                    if(b.getIcon() == currentBeacon){
+                                for (BeaconIconObject b : beaconIcons) {
+                                    if (b.getIcon() == currentBeacon) {
                                         b.setCoords(event.getX(), event.getY());
                                     }
                                 }

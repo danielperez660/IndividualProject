@@ -9,4 +9,7 @@
     <string name="error_bluetooth_not_supported">Bluetooth not supported</string>
     <string name="clear" />
     <string name="unknown_device" />
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -65,7 +65,6 @@ public class SearchFragment extends Fragment {
 
                 beacon.putString("bluetoothID", beaconEntry.getBeaconID());
                 beacon.putString("bluetoothName", beaconEntry.getBeaconName());
-                beacon.putString("bluetoothPos", beaconEntry.getPosition());
 
                 Intent intent = new Intent(getActivity(), BeaconRegisterActivity.class);
                 intent.putExtras(beacon);
