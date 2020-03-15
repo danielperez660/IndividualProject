@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class BeaconManagerFragment extends Fragment {
 
-    SQLiteOpenHelper dbHelper;
+    DatabaseHelper dbHelper;
     ArrayList<BeaconIconObject> beaconIcons;
     ArrayList<BeaconEntry> beacons;
     View view;
@@ -52,8 +52,9 @@ public class BeaconManagerFragment extends Fragment {
 
         map.setOnDragListener(onDrag());
 
+        beaconIcons = dbHelper.getAllIcons();
 
-        for (BeaconEntry i : ((DatabaseHelper) dbHelper).getAllEntries()) {
+        for (BeaconEntry i : dbHelper.getAllEntries()) {
             String id = i.getBeaconID() + "\n";
             beacons.add(i);
         }
@@ -90,8 +91,13 @@ public class BeaconManagerFragment extends Fragment {
                 }
 
                 beaconIcons.clear();
+                dbHelper.clearIcons();
             }
         });
+
+        if(beaconIcons.size() != 0){
+            createExistingIcon();
+        }
 
         return view;
     }
@@ -135,8 +141,27 @@ public class BeaconManagerFragment extends Fragment {
         newIcon.setCoords(newImage.getLeft(), newImage.getTop());
 
         beaconIcons.add(newIcon);
+        dbHelper.addIconEntry(newIcon);
 
         newImage.setOnTouchListener(onTouch());
+    }
+
+    private void createExistingIcon(){
+        for(BeaconIconObject icon : beaconIcons){
+            ImageView newImage = new ImageView(getActivity());
+            RelativeLayout.LayoutParams layouP = new RelativeLayout.LayoutParams(128, 128);
+
+            newImage.setLayoutParams(layouP);
+            newImage.setImageResource(R.drawable.ic_bluetooth);
+            newImage.setTag("Beacon Object");
+
+            newImage.setY(icon.getCoords()[1]);
+            newImage.setX(icon.getCoords()[0]);
+
+            icon.setIcon(newImage);
+            ((ViewGroup) view).addView(newImage);
+            newImage.setOnTouchListener(onTouch());
+        }
     }
 
     private View.OnTouchListener onTouch() {
@@ -187,6 +212,7 @@ public class BeaconManagerFragment extends Fragment {
                                 for (BeaconIconObject b : beaconIcons) {
                                     if (b.getIcon() == currentBeacon) {
                                         b.setCoords(event.getX(), event.getY());
+                                        dbHelper.updateIcon(b);
                                     }
                                 }
                             }
