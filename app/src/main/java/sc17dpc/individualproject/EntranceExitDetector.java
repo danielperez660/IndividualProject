@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -57,13 +56,14 @@ public class EntranceExitDetector {
             BeaconEntry beacon = icon.getBeacon();
 
             if (icon.getCoords()[1] > max) {
-                exterior = interior;
-                interior = beacon;
+                interior = exterior;
+                exterior = beacon;
                 max = icon.getCoords()[1];
             } else {
-                exterior = beacon;
+                interior = beacon;
             }
         }
+
 
         intent = new Intent(context, BeaconControllerService.class);
         Objects.requireNonNull(context.startService(intent));
@@ -80,7 +80,6 @@ public class EntranceExitDetector {
             String ID = intent.getStringExtra("id");
 
             beaconRangeReceived(Double.parseDouble(distance), ID);
-            checkForEntranceOrExit();
         }
     };
 
@@ -98,16 +97,43 @@ public class EntranceExitDetector {
         }
 
         if (ID.equals(interior.getBeaconID())) {
-            interiorSeen = true;
+            if (!interiorSeen) {
+                Log.d("PhysicalTest", "Seeing interior now: " + distance);
+                interiorSeen = true;
+            }
+
             interiorDistance = distance;
+
+            if (interiorDistance < 1 && !exitThreshold) {
+                exitThreshold = true;
+                Log.d("PhysicalTest", "interior in range: " + distance);
+
+                if (firstThreshold == -1) {
+                    firstThreshold = 0;
+                }
+
+                checkForEntranceOrExit();
+            }
         } else if (ID.equals(exterior.getBeaconID())) {
-            exteriorSeen = true;
+            if (!exteriorSeen) {
+                Log.d("PhysicalTest", "Seeing exterior now: " + distance);
+                exteriorSeen = true;
+            }
             exteriorDistance = distance;
+
+            if (exteriorDistance < 1 && !entranceThreshold) {
+                entranceThreshold = true;
+                Log.d("PhysicalTest", "exterior in range: " + distance);
+
+                if (firstThreshold == -1) {
+                    firstThreshold = 1;
+                }
+                checkForEntranceOrExit();
+            }
         }
     }
 
     private void exitedBeaconRange(String id) {
-        Log.d("EntranceStatus", "exited " + id);
         if (id.equals(interior.getBeaconID())) {
             interiorSeen = false;
             interiorDistance = Double.NaN;
@@ -123,58 +149,45 @@ public class EntranceExitDetector {
             return;
         }
 
-        if (exteriorDistance < 1) {
-            entranceThreshold = true;
-
-            if (firstThreshold == -1){
-                firstThreshold = 1;
-            }
-
-            Log.d("PhysicalTest", "Entrance");
-
-//            Toast toast = Toast.makeText(context, "foundEntrance", Toast.LENGTH_SHORT);
-//            toast.show();
-        }
-
-        if (interiorDistance < 1) {
-            exitThreshold = true;
-
-            if (firstThreshold == -1){
-                firstThreshold = 0;
-            }
-            Log.d("PhysicalTest", "exit");
-
-
-//            Toast toast = Toast.makeText(context, "foundExit", Toast.LENGTH_SHORT);
-//            toast.show();
-
-        }
-
         // firstThreshold 1: door is reached first, so entering building
         if (entranceThreshold && exitThreshold) {
             if (firstThreshold == 1) {
                 sApi.sendPayload(true);
                 status = true;
 
-            }else if (firstThreshold == 0){
+            } else if (firstThreshold == 0) {
                 sApi.sendPayload(false);
                 status = false;
             }
 
-            refresh();
+            try {
+                refresh();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
         }
     }
 
-    private void refresh() {
+    private void refresh() throws InterruptedException {
+        Log.d("PhysicalTest", "CLEARED");
+
         entranceThreshold = false;
         exitThreshold = false;
-        firstThreshold =  -1;
+        firstThreshold = -1;
 
         interiorSeen = false;
         exteriorSeen = false;
 
         interiorDistance = Double.NaN;
         exteriorDistance = Double.NaN;
+
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(beaconRanger);
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(beaconExit);
+
+        Thread.sleep(10000);
+
+        LocalBroadcastManager.getInstance(context).registerReceiver(beaconRanger, new IntentFilter("SendRange"));
+        LocalBroadcastManager.getInstance(context).registerReceiver(beaconExit, new IntentFilter("SendExit"));
     }
 }

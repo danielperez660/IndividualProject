@@ -30,11 +30,12 @@ public class SlackApiObject {
         try {
             if(System.currentTimeMillis() >= time + 5000){
                 res = slack.send(url, payload);
+                Log.d("SlackApi", res.getBody());
                 time = System.currentTimeMillis();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.d("SlackApi", res.getBody());
+
     }
 }

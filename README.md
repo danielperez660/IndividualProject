@@ -7,6 +7,10 @@ There will be an interaction with a mobile android application which will have a
 If initial interaction between the phone and the beacon is set up then there will be an attempt to interact with the time logging website to log how long the worker has been in the office for.
 
 ## Log
+### 16-03-20
+* Changes to system for entrance/exit checking 
+* Tests with whether it is possible to use other ranging algorithm
+
 ### 15-03-20
 * Now able to store the location of beacons and it gets reinstated when return to fragment
 * Added a way for the system to check whether you are entering or leaving. Its not working yet.

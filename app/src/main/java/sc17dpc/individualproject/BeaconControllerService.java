@@ -13,6 +13,8 @@ import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
+import org.altbeacon.beacon.service.ArmaRssiFilter;
+import org.altbeacon.beacon.service.RunningAverageRssiFilter;
 
 import java.util.Collection;
 
@@ -52,6 +54,9 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
     @Override
     public void onBeaconServiceConnect() {
         Log.d("HomeMade", "Searching for beacons");
+
+        beaconManager.setRssiFilterImplClass(RunningAverageRssiFilter.class);
+        RunningAverageRssiFilter.setSampleExpirationMilliseconds(5000l);
 
         beaconManager.setRegionStatePersistenceEnabled(false);
         beaconManager.addMonitorNotifier(new MonitorNotifier() {
@@ -110,6 +115,8 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
 
         intent.putExtra("distance", Double.toString(distance));
         intent.putExtra("id", b.getBluetoothAddress());
+
+        Log.d("DistanceMonitor", "Distance: " + distance + " for: " + b.getBluetoothAddress());
 
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
