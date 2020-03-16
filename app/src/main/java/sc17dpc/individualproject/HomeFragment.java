@@ -14,8 +14,7 @@ public class HomeFragment extends Fragment {
 
     private TextView status;
     private ImageView statusImage;
-    private boolean status_test;
-    SlackApiObject sApi;
+    private boolean status_test = false;
 
 
     @android.support.annotation.Nullable
@@ -24,37 +23,35 @@ public class HomeFragment extends Fragment {
         Log.d("HomeMade", "Home");
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        sApi = new SlackApiObject();
         status = view.findViewById(R.id.statusText);
         statusImage = view.findViewById(R.id.statusImage);
-        status_test = false;
 
-        statusImage.setOnClickListener(new View.OnClickListener(){
+        assert getArguments() != null;
+        unpack(getArguments());
 
-            @Override
-            public void onClick(View v) {
-                if (status_test){
-                    setOutOfOffice();
-                }else{
-                    setInOffice();
-                }
-            }
-        });
-
+        if (!status_test){
+            setOutOfOffice();
+        }else{
+            setInOffice();
+        }
         return view;
     }
 
+    private void unpack(Bundle arguments) {
+        try {
+            status_test = arguments.getBoolean("status");
+        }catch(Exception e){
+
+        }
+    }
+
     public void setInOffice(){
-        sApi.sendPayload(true);
         statusImage.setImageResource(R.drawable.ic_in);
         status.setText("Status: In Office");
-        status_test = true;
     }
 
     public void setOutOfOffice(){
-        sApi.sendPayload(false);
         statusImage.setImageResource(R.drawable.ic_logout);
         status.setText("Status: Not in Office");
-        status_test = false;
     }
 }

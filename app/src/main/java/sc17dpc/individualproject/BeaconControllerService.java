@@ -23,12 +23,11 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
 
     private org.altbeacon.beacon.BeaconManager beaconManager;
     private Thread mThread;
-    // private Collection<Beacon> beaconList;
 
     // Stops searching for beacons when the service is stopped
     @Override
     public void onDestroy() {
-        Log.d("HomeMade", "Stopped Search for beacons" );
+        Log.d("HomeMade", "Stopped Search for beacons");
         beaconManager.unbind(this);
         mThread.interrupt();
         super.onDestroy();
@@ -37,7 +36,7 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
     // Does beacon search setup and starts search for UID
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mThread = new Thread(){
+        mThread = new Thread() {
             public void run() {
             }
         };
@@ -52,16 +51,16 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
 
     @Override
     public void onBeaconServiceConnect() {
-        final Region region = new Region("DanielBeaconNew",null, null, null);
         Log.d("HomeMade", "Searching for beacons");
 
         beaconManager.setRegionStatePersistenceEnabled(false);
-        beaconManager.addMonitorNotifier(new MonitorNotifier()  {
+        beaconManager.addMonitorNotifier(new MonitorNotifier() {
 
             // Finds a beacon and commences to track its distance
             @Override
             public void didEnterRegion(Region region) {
                 try {
+                    Log.d("HomeMade", "entered: " + region.getBluetoothAddress());
                     beaconManager.startRangingBeaconsInRegion(region);
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -72,6 +71,8 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
             @Override
             public void didExitRegion(Region region) {
                 try {
+                    Log.d("HomeMade", "didExitRegion: I have just switched from seeing to not seeing beacons: " + region.getBluetoothAddress());
+                    sendBeaconExit(region.getBluetoothAddress());
                     beaconManager.stopRangingBeaconsInRegion(region);
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -80,7 +81,7 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
 
             @Override
             public void didDetermineStateForRegion(int state, Region region) {
-                Log.d("HomeMade", "didDetermineStateForRegion: I have just switched from seeing/not seeing beacons: "+region.getBluetoothAddress());
+                Log.d("HomeMade", "didDetermineStateForRegion: I have just switched from seeing/not seeing beacons: " + region.getBluetoothAddress());
             }
         });
 
@@ -88,19 +89,42 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
         beaconManager.addRangeNotifier(new RangeNotifier() {
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-                for (Beacon b: beacons ) {
-                    Log.d("HomeMade", b.getBluetoothAddress());
-                    sendBeaconAddress(b);
+                for (Beacon b : beacons) {
+
+                    if (b.getDistance() < 5.0) {
+                        sendBeaconRange(b, b.getDistance());
+                    }
+                    sendBeaconFound(b);
                 }
             }
         });
 
         try {
-            beaconManager.startMonitoringBeaconsInRegion(region);
-        } catch (RemoteException ignored) {    }
+            beaconManager.startMonitoringBeaconsInRegion(new Region("monitorID", null, null, null));
+        } catch (RemoteException ignored) {
+        }
     }
 
-    private void sendBeaconAddress(Beacon b){
+    private void sendBeaconRange(Beacon b, double distance) {
+        Intent intent = new Intent("SendRange");
+
+        intent.putExtra("distance", Double.toString(distance));
+        intent.putExtra("id", b.getBluetoothAddress());
+
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void sendBeaconExit(String b) {
+        Intent intent = new Intent("SendExit");
+
+        intent.putExtra("id", b);
+
+        if (b != null) {
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        }
+    }
+
+    private void sendBeaconFound(Beacon b) {
         Intent intent = new Intent("SendBeacon");
         intent.putExtra("address", b.getBluetoothAddress());
         intent.putExtra("name", b.getBluetoothName());

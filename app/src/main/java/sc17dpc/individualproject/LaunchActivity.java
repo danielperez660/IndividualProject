@@ -12,6 +12,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import android.bluetooth.BluetoothAdapter;
@@ -21,6 +22,9 @@ import android.widget.Toast;
 public class LaunchActivity extends AppCompatActivity {
 
     private BluetoothAdapter mBluetoothAdapter;
+    private EntranceExitDetector entranceExitManager;
+
+    private boolean status = false;
 
     private static final int PERMISSION_REQUEST_BLUETOOTH = 1;
 
@@ -35,14 +39,22 @@ public class LaunchActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     selectedFragment = new BeaconManagerFragment();
+                    entranceExitManager.pause(getApplicationContext());
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 case R.id.navigation_status:
                     selectedFragment = new HomeFragment();
+                    entranceExitManager.start(getApplicationContext());
+                    Bundle args = new Bundle();
+                    args.putBoolean("status", entranceExitManager.getStatus());
+
+                    selectedFragment.setArguments(args);
+
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 case R.id.navigation_notifications:
                     selectedFragment = new SearchFragment();
+                    entranceExitManager.pause(getApplicationContext());
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
             }
@@ -55,9 +67,15 @@ public class LaunchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
+        // runs the object that will compute if we are in the region or not
+        entranceExitManager = new EntranceExitDetector();
+        entranceExitManager.start(getApplicationContext());
+
+        // allows us to access the required permissions for background
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        // sets startup fragment
         Fragment selectedFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
 
@@ -115,6 +133,12 @@ public class LaunchActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        entranceExitManager.start(getApplicationContext());
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         // User chose not to enable Bluetooth.
@@ -125,5 +149,6 @@ public class LaunchActivity extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
     }
+
 
 }

@@ -83,8 +83,6 @@ public class SearchFragment extends Fragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("HomeMade", "Search Started");
-
                 // Starts the beacon tracking service
                 intent = new Intent(getActivity(), BeaconControllerService.class);
                 Objects.requireNonNull(getActivity()).startService(intent);
@@ -117,7 +115,6 @@ public class SearchFragment extends Fragment {
             newBeacon.setBeaconID(address);
             newBeacon.setBeaconName(name);
 
-            Log.d("HomeMade", "Message Received " + address);
             beaconFound(newBeacon);
         }
     };

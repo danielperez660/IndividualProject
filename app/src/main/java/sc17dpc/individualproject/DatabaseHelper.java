@@ -16,7 +16,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper sInstance;
 
     private static final String DATABASE_NAME = "beaconsRegistered";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
 
     private static final String TABLE_BEACONS = "beacons";
@@ -87,8 +87,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public List<BeaconEntry> getAllEntries() {
-        List<BeaconEntry> beacons = new ArrayList<>();
+    public ArrayList<BeaconEntry> getAllEntries() {
+        ArrayList<BeaconEntry> beacons = new ArrayList<>();
         String query = "SELECT * FROM " + TABLE_BEACONS;
 
         SQLiteDatabase db = this.getReadableDatabase();
