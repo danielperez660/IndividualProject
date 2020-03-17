@@ -55,9 +55,6 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
     public void onBeaconServiceConnect() {
         Log.d("HomeMade", "Searching for beacons");
 
-        beaconManager.setRssiFilterImplClass(RunningAverageRssiFilter.class);
-        RunningAverageRssiFilter.setSampleExpirationMilliseconds(5000l);
-
         beaconManager.setRegionStatePersistenceEnabled(false);
         beaconManager.addMonitorNotifier(new MonitorNotifier() {
 
@@ -96,7 +93,7 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 for (Beacon b : beacons) {
 
-                    if (b.getDistance() < 5.0) {
+                    if (b.getDistance() < 8.0) {
                         sendBeaconRange(b, b.getDistance());
                     }
                     sendBeaconFound(b);

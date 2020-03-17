@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -41,6 +42,10 @@ public class EntranceExitDetector {
 
     void pause(Context context) {
         this.context = context;
+
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(beaconExit);
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(beaconRanger);
+
         context.stopService(intent);
     }
 
@@ -104,7 +109,7 @@ public class EntranceExitDetector {
 
             interiorDistance = distance;
 
-            if (interiorDistance < 1 && !exitThreshold) {
+            if (interiorDistance < 2 && !exitThreshold) {
                 exitThreshold = true;
                 Log.d("PhysicalTest", "interior in range: " + distance);
 
@@ -121,7 +126,7 @@ public class EntranceExitDetector {
             }
             exteriorDistance = distance;
 
-            if (exteriorDistance < 1 && !entranceThreshold) {
+            if (exteriorDistance < 2 && !entranceThreshold) {
                 entranceThreshold = true;
                 Log.d("PhysicalTest", "exterior in range: " + distance);
 
@@ -154,7 +159,6 @@ public class EntranceExitDetector {
             if (firstThreshold == 1) {
                 sApi.sendPayload(true);
                 status = true;
-
             } else if (firstThreshold == 0) {
                 sApi.sendPayload(false);
                 status = false;
