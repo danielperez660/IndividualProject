@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
+
     <ImageView
         android:id="@+id/EntryView"
         android:layout_width="match_parent"
@@ -14,31 +15,15 @@
         android:layout_marginStart="0dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="0dp"
-        android:layout_marginBottom="103dp"
+        android:layout_marginBottom="74dp"
+        android:spinnerMode="dropdown"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RoomOptions"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_test_room"
-        tools:srcCompat="@drawable/ic_test_room" />
-
-    <Spinner
-        android:id="@+id/RoomOptions"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_above="@+id/EntryView"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="43dp"
-        android:layout_marginBottom="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:srcCompat="@drawable/ic_straight_room"
+        tools:srcCompat="@drawable/ic_straight_room" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -46,7 +31,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="0dp"
         tools:layout_editor_absoluteX="15dp"
         tools:layout_editor_absoluteY="406dp">
 
@@ -96,5 +81,46 @@
         android:text="Entrance"
         android:textColor="@android:color/background_dark"
         android:textStyle="bold" />
+
+    <RadioGroup
+        android:id="@+id/RoomOptions"
+        android:layout_width="match_parent"
+        android:layout_height="214dp"
+        android:layout_above="@+id/EntryView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="-68dp">
+
+        <RadioButton
+            android:id="@+id/StraightRoom"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Straight Entrance" />
+
+        <RadioButton
+            android:id="@+id/TRoom"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="T Shaped Entrance" />
+
+        <RadioButton
+            android:id="@+id/LeftRoom"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Left Bend Entrance" />
+
+        <RadioButton
+            android:id="@+id/RightRoom"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Right Bend Entrance" />
+    </RadioGroup>
 
 </RelativeLayout >

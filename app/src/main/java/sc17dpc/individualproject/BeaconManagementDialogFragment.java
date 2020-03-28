@@ -31,7 +31,7 @@ public class BeaconManagementDialogFragment extends DialogFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_dialog, container, false);
+        View view = inflater.inflate(R.layout.fragment_dialog, container, false);
 
         List<String> beaconIDs = new ArrayList<>();
 
@@ -39,11 +39,11 @@ public class BeaconManagementDialogFragment extends DialogFragment {
             beaconIDs.add(i.getBeaconID());
         }
 
-        Button select = v.findViewById(R.id.select_button);
-        Button cancel = v.findViewById(R.id.cancel_button);
-        final Spinner beaconSelector = v.findViewById(R.id.beacon_option);
+        Button select = view.findViewById(R.id.select_button);
+        Button cancel = view.findViewById(R.id.cancel_button);
+        final Spinner beaconSelector = view.findViewById(R.id.beacon_option);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(v.getContext(), android.R.layout.simple_spinner_item, beaconIDs);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_item, beaconIDs);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         beaconSelector.setAdapter(adapter);
 
@@ -86,7 +86,7 @@ public class BeaconManagementDialogFragment extends DialogFragment {
             }
         });
 
-        return v;
+        return view;
     }
 
     private void setSelected(BeaconEntry selected) {

@@ -54,8 +54,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_test_room" />
-                            <entry key="sourceFile" value="C:\Users\Daniel\Desktop\Coursework\Year 3\Personal Project\Image_assets\test_room.svg" />
+                            <entry key="outputName" value="ic_t_shaped_room" />
+                            <entry key="sourceFile" value="C:\Users\Daniel\Desktop\Coursework\Year 3\Personal Project\Image_assets\T_shaped_room.svg" />
                           </map>
                         </option>
                       </PersistentState>

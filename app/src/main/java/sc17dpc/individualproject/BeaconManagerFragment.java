@@ -18,12 +18,19 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class BeaconManagerFragment extends Fragment {
 
@@ -31,7 +38,7 @@ public class BeaconManagerFragment extends Fragment {
     ArrayList<BeaconIconObject> beaconIcons;
     ArrayList<BeaconEntry> beacons;
     View view;
-    ImageView map;
+    ImageView entranceImage;
 
     @android.support.annotation.Nullable
     @Override
@@ -45,19 +52,38 @@ public class BeaconManagerFragment extends Fragment {
         final Button addButton = view.findViewById(R.id.AddButton);
         Button removeButton = view.findViewById(R.id.RemoveButton);
 
+        RadioGroup roomSelector = view.findViewById(R.id.RoomOptions);
+
         beaconIcons = new ArrayList<>();
         beacons = new ArrayList<>();
 
-        map = view.findViewById(R.id.EntryView);
-
-        map.setOnDragListener(onDrag());
+        entranceImage = view.findViewById(R.id.EntryView);
+        entranceImage.setOnDragListener(onDrag());
 
         beaconIcons = dbHelper.getAllIcons();
 
-        for (BeaconEntry i : dbHelper.getAllEntries()) {
-            String id = i.getBeaconID() + "\n";
-            beacons.add(i);
-        }
+        beacons.addAll(dbHelper.getAllEntries());
+
+        roomSelector.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.StraightRoom:
+                        changeRoomOption("Straight Entrance");
+                        break;
+                    case R.id.LeftRoom:
+                        changeRoomOption("Left Entrance");
+                        break;
+                    case R.id.TRoom:
+                        changeRoomOption("T Entrance");
+                        break;
+                    case R.id.RightRoom:
+                        changeRoomOption("Right Entrance");
+                        break;
+                }
+            }
+        });
+
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ClickableViewAccessibility")
@@ -70,7 +96,7 @@ public class BeaconManagerFragment extends Fragment {
                 }
 
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+//                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
 
                 BeaconManagementDialogFragment df = BeaconManagementDialogFragment.newInstance(beacons);
                 df.setTargetFragment(BeaconManagerFragment.this, 111);
@@ -95,7 +121,7 @@ public class BeaconManagerFragment extends Fragment {
             }
         });
 
-        if(beaconIcons.size() != 0){
+        if (beaconIcons.size() != 0) {
             createExistingIcon();
         }
 
@@ -115,6 +141,33 @@ public class BeaconManagerFragment extends Fragment {
         }
     }
 
+    private void changeRoomOption(String newRoom) {
+        switch (newRoom) {
+            case "Straight Entrance":
+                entranceImage.setImageResource(R.drawable.ic_straight_room);
+                Log.d("RoomChange", newRoom);
+                entranceImage.setOnDragListener(onDrag());
+                break;
+            case "Left Entrance":
+                entranceImage.setImageResource(R.drawable.ic_left_bend_room);
+                Log.d("RoomChange", newRoom);
+                entranceImage.setOnDragListener(onDrag());
+                break;
+            case "Right Entrance":
+                entranceImage.setImageResource(R.drawable.ic_right_bend_room);
+                Log.d("RoomChange", newRoom);
+                entranceImage.setOnDragListener(onDrag());
+                break;
+            case "T Entrance":
+                entranceImage.setImageResource(R.drawable.ic_t_shaped_room);
+                Log.d("RoomChange", newRoom);
+                entranceImage.setOnDragListener(onDrag());
+                break;
+        }
+
+
+    }
+
     private void createNewIcon(String id) {
 
         ImageView newImage = new ImageView(getActivity());
@@ -130,10 +183,10 @@ public class BeaconManagerFragment extends Fragment {
 
         BeaconIconObject newIcon = new BeaconIconObject();
 
-        for(BeaconEntry b : beacons){
-            if(b.getBeaconID().equals(id)){
+        for (BeaconEntry b : beacons) {
+            if (b.getBeaconID().equals(id)) {
                 newIcon.setBeacon(b);
-                Log.d("Added: " , b.getBeaconID());
+                Log.d("Added: ", b.getBeaconID());
             }
         }
 
@@ -146,8 +199,8 @@ public class BeaconManagerFragment extends Fragment {
         newImage.setOnTouchListener(onTouch());
     }
 
-    private void createExistingIcon(){
-        for(BeaconIconObject icon : beaconIcons){
+    private void createExistingIcon() {
+        for (BeaconIconObject icon : beaconIcons) {
             ImageView newImage = new ImageView(getActivity());
             RelativeLayout.LayoutParams layouP = new RelativeLayout.LayoutParams(128, 128);
 
@@ -208,7 +261,6 @@ public class BeaconManagerFragment extends Fragment {
                             if (currentBeacon != null) {
                                 currentBeacon.setY(event.getY());
                                 currentBeacon.setX(event.getX());
-
                                 for (BeaconIconObject b : beaconIcons) {
                                     if (b.getIcon() == currentBeacon) {
                                         b.setCoords(event.getX(), event.getY());
