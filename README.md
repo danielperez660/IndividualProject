@@ -9,6 +9,8 @@ If initial interaction between the phone and the beacon is set up then there wil
 ## Log
 ### 02-04-20
 * Added way of identifying who is leaving the office in the text chat of slack
+* Added information storage for preferred map
+* Did a whole load of renaming
 
 ### 28-03-20
 * changes to room selection now allows to be done with radio button
