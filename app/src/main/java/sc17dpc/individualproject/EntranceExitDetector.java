@@ -4,9 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -157,10 +157,10 @@ public class EntranceExitDetector {
         // firstThreshold 1: door is reached first, so entering building
         if (entranceThreshold && exitThreshold) {
             if (firstThreshold == 1) {
-                sApi.sendPayload(true);
+                sApi.sendPayload(true, getName());
                 status = true;
             } else if (firstThreshold == 0) {
-                sApi.sendPayload(false);
+                sApi.sendPayload(false, getName());
                 status = false;
             }
 
@@ -193,5 +193,17 @@ public class EntranceExitDetector {
 
         LocalBroadcastManager.getInstance(context).registerReceiver(beaconRanger, new IntentFilter("SendRange"));
         LocalBroadcastManager.getInstance(context).registerReceiver(beaconExit, new IntentFilter("SendExit"));
+    }
+
+    private String getName(){
+        String name = null;
+        SharedPreferences pref = Objects.requireNonNull(context).getSharedPreferences("MyPref", 0);
+        try{
+            name = pref.getString("name", null);
+
+        }catch(Exception ignored){
+
+        }
+        return name;
     }
 }

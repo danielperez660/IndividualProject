@@ -10,20 +10,20 @@ import java.io.IOException;
 
 public class SlackApiObject {
 
-    private String url = "https://hooks.slack.com/services/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";
+    private final String url = "https://hooks.slack.com/services/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";
     private Slack slack = Slack.getInstance();
     private String text;
 
     private long time = 0;
 
-    public void sendPayload(boolean state) {
+    public void sendPayload(boolean state, String name) {
         WebhookResponse res = null;
 
 
         if (state) {
-            text = "In Office";
+            text = name + " Is In Office";
         } else {
-            text = "Out of Office";
+            text = name + " Is Out of Office";
         }
 
         Payload payload = Payload.builder().text(text).build();
