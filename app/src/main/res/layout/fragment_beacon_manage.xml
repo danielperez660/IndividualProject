@@ -94,29 +94,29 @@
         android:layout_marginBottom="-68dp">
 
         <RadioButton
-            android:id="@+id/StraightRoom"
+            android:id="@+id/straightEntrance"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:checked="true"
+            android:checked="false"
             android:text="Straight Entrance" />
 
         <RadioButton
-            android:id="@+id/TRoom"
+            android:id="@+id/tEntrance"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="T Shaped Entrance" />
 
         <RadioButton
-            android:id="@+id/LeftRoom"
+            android:id="@+id/leftEntrance"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Left Bend Entrance" />
 
         <RadioButton
-            android:id="@+id/RightRoom"
+            android:id="@+id/rightEntrance"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"

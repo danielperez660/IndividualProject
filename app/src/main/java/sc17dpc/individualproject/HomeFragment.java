@@ -88,13 +88,7 @@ public class HomeFragment extends Fragment {
     }
 
     private String getCurrentName(){
-        String name = null;
-        try{
-            name = pref.getString("name", null);
-
-        }catch(Exception ignored){
-
-        }
+        String name = pref.getString("name", null);
         return name;
     }
 

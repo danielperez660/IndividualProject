@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Intent;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,27 +18,25 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Objects;
 
 public class BeaconManagerFragment extends Fragment {
 
-    DatabaseHelper dbHelper;
-    ArrayList<BeaconIconObject> beaconIcons;
-    ArrayList<BeaconEntry> beacons;
-    View view;
-    ImageView entranceImage;
+    private DatabaseHelper dbHelper;
+    private ArrayList<BeaconIconObject> beaconIcons;
+    private ArrayList<BeaconEntry> beacons;
+    private View view;
+    private ImageView entranceImage;
+    private SharedPreferences pref;
 
     @android.support.annotation.Nullable
     @Override
@@ -46,6 +44,7 @@ public class BeaconManagerFragment extends Fragment {
         Log.d("HomeMade", "Status");
 
         view = inflater.inflate(R.layout.fragment_beacon_manage, container, false);
+        pref = Objects.requireNonNull(getContext()).getSharedPreferences("MyPref", 0);
 
         dbHelper = DatabaseHelper.getInstance(getContext());
 
@@ -64,20 +63,23 @@ public class BeaconManagerFragment extends Fragment {
 
         beacons.addAll(dbHelper.getAllEntries());
 
+        changeRoomOption(getRoom());
+        checkInitialRoom(getRoom());
+
         roomSelector.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
-                    case R.id.StraightRoom:
+                    case R.id.straightEntrance:
                         changeRoomOption("Straight Entrance");
                         break;
-                    case R.id.LeftRoom:
+                    case R.id.leftEntrance:
                         changeRoomOption("Left Entrance");
                         break;
-                    case R.id.TRoom:
+                    case R.id.tEntrance:
                         changeRoomOption("T Entrance");
                         break;
-                    case R.id.RightRoom:
+                    case R.id.rightEntrance:
                         changeRoomOption("Right Entrance");
                         break;
                 }
@@ -128,6 +130,18 @@ public class BeaconManagerFragment extends Fragment {
         return view;
     }
 
+    private void checkInitialRoom(String room) {
+
+        HashMap<String, Integer> rooms = new HashMap<>();
+        rooms.put("Straight Entrance", R.id.straightEntrance);
+        rooms.put("Left Entrance", R.id.leftEntrance);
+        rooms.put("Right Entrance", R.id.rightEntrance);
+        rooms.put("T Entrance", R.id.tEntrance);
+
+        RadioButton clicked = view.findViewById(rooms.get(room));
+        clicked.toggle();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -142,6 +156,11 @@ public class BeaconManagerFragment extends Fragment {
     }
 
     private void changeRoomOption(String newRoom) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("room", newRoom);
+        editor.apply();
+
+
         switch (newRoom) {
             case "Straight Entrance":
                 entranceImage.setImageResource(R.drawable.ic_straight_room);
@@ -280,5 +299,10 @@ public class BeaconManagerFragment extends Fragment {
                 return true;
             }
         };
+    }
+
+    public String getRoom(){
+        String room = pref.getString("room", "Straight Entrance");
+        return room;
     }
 }
