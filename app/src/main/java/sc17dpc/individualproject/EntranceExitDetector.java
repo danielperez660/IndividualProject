@@ -109,7 +109,7 @@ public class EntranceExitDetector {
 
             interiorDistance = distance;
 
-            if (interiorDistance < 2 && !exitThreshold) {
+            if (interiorDistance < 3 && !exitThreshold) {
                 exitThreshold = true;
                 Log.d("PhysicalTest", "interior in range: " + distance);
 
@@ -126,7 +126,7 @@ public class EntranceExitDetector {
             }
             exteriorDistance = distance;
 
-            if (exteriorDistance < 2 && !entranceThreshold) {
+            if (exteriorDistance < 3 && !entranceThreshold) {
                 entranceThreshold = true;
                 Log.d("PhysicalTest", "exterior in range: " + distance);
 
