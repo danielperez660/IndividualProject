@@ -23,6 +23,7 @@ public class BeaconManagementDialogFragment extends DialogFragment {
     private BeaconEntry selected = null;
     private ArrayList<BeaconEntry> beacons;
 
+    // Creates a fragment dialog box and gets information about the beacons
     public static BeaconManagementDialogFragment newInstance(ArrayList<BeaconEntry> beaconList) {
         BeaconManagementDialogFragment frag = new BeaconManagementDialogFragment();
         frag.beacons = beaconList;
@@ -43,15 +44,16 @@ public class BeaconManagementDialogFragment extends DialogFragment {
         Button cancel = view.findViewById(R.id.cancel_button);
         final Spinner beaconSelector = view.findViewById(R.id.beacon_option);
 
+        // General set up of the spinner in the dialogue
         ArrayAdapter<String> adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_item, beaconIDs);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         beaconSelector.setAdapter(adapter);
 
+        // When a beacon item is selected from the spinner it will notify the main beaconmanagerfragment
         beaconSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String beaconID = beaconSelector.getItemAtPosition(position).toString();
-                Log.d("Spinner", beaconID);
 
                 for (BeaconEntry i : beacons) {
                     if (i.getBeaconID().equals(beaconID)) {

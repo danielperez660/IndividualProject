@@ -66,6 +66,7 @@ public class BeaconManagerFragment extends Fragment {
         changeRoomOption(getRoom());
         checkInitialRoom(getRoom());
 
+        //Sets the options for the room type
         roomSelector.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -86,19 +87,20 @@ public class BeaconManagerFragment extends Fragment {
             }
         });
 
-
+        // Manages the action of adding a beacon
         addButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public void onClick(View v) {
 
+                // Error message if you have used all your given beacons
                 if (beaconIcons.size() == beacons.size()) {
                     Toast.makeText(getActivity(), "No more registered beacons", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+                // Changes the fragment in view to the beaconManagementDialogue
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
 
                 BeaconManagementDialogFragment df = BeaconManagementDialogFragment.newInstance(beacons);
                 df.setTargetFragment(BeaconManagerFragment.this, 111);
@@ -106,7 +108,7 @@ public class BeaconManagerFragment extends Fragment {
             }
         });
 
-
+        // Manages the actions for the clear button
         removeButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -130,6 +132,7 @@ public class BeaconManagerFragment extends Fragment {
         return view;
     }
 
+    // Does intitial set up of room
     private void checkInitialRoom(String room) {
 
         HashMap<String, Integer> rooms = new HashMap<>();
@@ -142,6 +145,7 @@ public class BeaconManagerFragment extends Fragment {
         clicked.toggle();
     }
 
+    // Gets returned data from the dialogue as to which beacon has been added
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -155,6 +159,7 @@ public class BeaconManagerFragment extends Fragment {
         }
     }
 
+    // Manages the radio buttons for changing room type
     private void changeRoomOption(String newRoom) {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("room", newRoom);
@@ -187,6 +192,7 @@ public class BeaconManagerFragment extends Fragment {
 
     }
 
+    // Manages the creation and appending of new icon images onto the screen
     private void createNewIcon(String id) {
 
         ImageView newImage = new ImageView(getActivity());
@@ -215,9 +221,11 @@ public class BeaconManagerFragment extends Fragment {
         beaconIcons.add(newIcon);
         dbHelper.addIconEntry(newIcon);
 
+        // Gives the image the option to get dragged around
         newImage.setOnTouchListener(onTouch());
     }
 
+    // Populates the map at the start with existing beacon configurations
     private void createExistingIcon() {
         for (BeaconIconObject icon : beaconIcons) {
             ImageView newImage = new ImageView(getActivity());
@@ -236,6 +244,7 @@ public class BeaconManagerFragment extends Fragment {
         }
     }
 
+    // Does set up for image dragging feature
     private View.OnTouchListener onTouch() {
         return new View.OnTouchListener() {
             @Override
@@ -253,6 +262,7 @@ public class BeaconManagerFragment extends Fragment {
         };
     }
 
+    // Manages the outcome of the beacon dragging action
     private View.OnDragListener onDrag() {
         return new View.OnDragListener() {
 
@@ -283,6 +293,8 @@ public class BeaconManagerFragment extends Fragment {
                                 for (BeaconIconObject b : beaconIcons) {
                                     if (b.getIcon() == currentBeacon) {
                                         b.setCoords(event.getX(), event.getY());
+
+                                        // updates database information about icon position
                                         dbHelper.updateIcon(b);
                                     }
                                 }
@@ -301,6 +313,7 @@ public class BeaconManagerFragment extends Fragment {
         };
     }
 
+    // Queries the preference file about the room type which has been previously assigned
     public String getRoom(){
         String room = pref.getString("room", "Straight Entrance");
         return room;

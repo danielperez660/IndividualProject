@@ -24,26 +24,21 @@ import androidx.annotation.Nullable;
 public class BeaconControllerService extends Service implements BeaconConsumer {
 
     private org.altbeacon.beacon.BeaconManager beaconManager;
-    private Thread mThread;
 
-    // Stops searching for beacons when the service is stopped
+    // Stops searching for beacons when the service is stopped. Allows for use in background
     @Override
     public void onDestroy() {
         Log.d("HomeMade", "Stopped Search for beacons");
         beaconManager.unbind(this);
-        mThread.interrupt();
         super.onDestroy();
     }
 
     // Does beacon search setup and starts search for UID
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mThread = new Thread() {
-            public void run() {
-            }
-        };
         beaconManager = org.altbeacon.beacon.BeaconManager.getInstanceForApplication(this);
 
+        // Defines the parsing format for our given beacon types
         beaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("s:0-1=feaa,m:2-2=00,p:3-3:-41,i:4-13,i:14-19"));
 
@@ -51,10 +46,12 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    // Detects whether a beacon has been seen in a range and at what distance it is
     @Override
     public void onBeaconServiceConnect() {
         Log.d("HomeMade", "Searching for beacons");
 
+        // Region persistence is disabled so that if the app starts in a beacon range it can still be detected
         beaconManager.setRegionStatePersistenceEnabled(false);
         beaconManager.addMonitorNotifier(new MonitorNotifier() {
 
@@ -107,6 +104,7 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
         }
     }
 
+    // Sends the distance of a beacon to a LocalBroadcastManager
     private void sendBeaconRange(Beacon b, double distance) {
         Intent intent = new Intent("SendRange");
 
@@ -118,6 +116,7 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
+    // Sends the ID of a beacons range which has been exited
     private void sendBeaconExit(String b) {
         Intent intent = new Intent("SendExit");
 
@@ -128,6 +127,7 @@ public class BeaconControllerService extends Service implements BeaconConsumer {
         }
     }
 
+    // Sent when a new beacon is found
     private void sendBeaconFound(Beacon b) {
         Intent intent = new Intent("SendBeacon");
         intent.putExtra("address", b.getBluetoothAddress());

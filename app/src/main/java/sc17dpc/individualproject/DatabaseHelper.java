@@ -29,7 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_BEACON_IMAGES_X = "x_coord";
     private static final String KEY_BEACON_IMAGES_Y = "y_coord";
 
-
+    // Allows for the singel instance of the DB to be accessed
     public static synchronized DatabaseHelper getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new DatabaseHelper(context.getApplicationContext());
@@ -41,6 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    // Creates the database
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createBeaconTable = "CREATE TABLE " + TABLE_BEACONS +
@@ -59,6 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    // Checks to see if there is a new version of the database defined in the codebase
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion != newVersion) {
@@ -69,6 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    // Adds a single beacon entry to the database
     public Boolean addEntry(BeaconEntry beacon) {
         ContentValues values = new ContentValues();
         values.put(KEY_BEACONS_BLUETOOTH_ID, beacon.getBeaconID());
@@ -87,6 +90,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    // Fetches all registered beacons from the database
     public ArrayList<BeaconEntry> getAllEntries() {
         ArrayList<BeaconEntry> beacons = new ArrayList<>();
         String query = "SELECT * FROM " + TABLE_BEACONS;
@@ -110,6 +114,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return beacons;
     }
 
+    // Gets a single beacon from the database
     public BeaconEntry getEntry(String beaconID) {
         BeaconEntry beacon = new BeaconEntry();
         String query = "SELECT * FROM " + TABLE_BEACONS + " WHERE " + KEY_BEACONS_BLUETOOTH_ID + " = " + "'" + beaconID + "'";
@@ -130,6 +135,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return beacon;
     }
 
+    // Gets all the icons existing in the database, relies on TABLE_BEACON_IMAGES
     public ArrayList<BeaconIconObject> getAllIcons() {
         ArrayList<BeaconIconObject> beacons = new ArrayList<>();
 
@@ -163,6 +169,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return beacons;
     }
 
+    // Updates a single icon entry
     public void updateIcon(BeaconIconObject icon) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -183,6 +190,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.update(TABLE_BEACON_IMAGES, cv, KEY_BEACON_ICON_BLUETOOTH_ID + " = '" + ID + "'", null);
     }
 
+    // Adds a single Icon entry to the database
     public Boolean addIconEntry(BeaconIconObject beacon) {
         ContentValues values = new ContentValues();
         values.put(KEY_BEACON_IMAGES_X, beacon.getCoords()[0]);
@@ -198,6 +206,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    // Clears the icons table
     public void clearIcons(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + TABLE_BEACON_IMAGES);

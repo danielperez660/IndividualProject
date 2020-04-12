@@ -37,6 +37,8 @@ public class LaunchActivity extends AppCompatActivity {
             Fragment selectedFragment;
 
             switch (item.getItemId()) {
+
+                // Changes to different fragments and manages the data passed to them
                 case R.id.navigation_home:
                     selectedFragment = new BeaconManagerFragment();
                     entranceExitManager.pause(getApplicationContext());
@@ -47,9 +49,7 @@ public class LaunchActivity extends AppCompatActivity {
                     entranceExitManager.start(getApplicationContext());
                     Bundle args = new Bundle();
                     args.putBoolean("status", entranceExitManager.getStatus());
-
                     selectedFragment.setArguments(args);
-
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 case R.id.navigation_notifications:
@@ -65,6 +65,7 @@ public class LaunchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Sets initial menu option
         setContentView(R.layout.activity_main_menu);
 
         // runs the object that will compute if we are in the region or not
@@ -85,6 +86,7 @@ public class LaunchActivity extends AppCompatActivity {
             finish();
         }
 
+        // Sets up the bluetooth manager
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
 
@@ -100,11 +102,12 @@ public class LaunchActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        // Basic UI changes to the menu bar
         navigation.getMenu().getItem(0).setChecked(false);
         navigation.getMenu().getItem(1).setChecked(true);
     }
 
-    //Checks if on resume the application still has bluetooth
+    //Checks if on resume the application still has bluetooth on resumed
     @Override
     protected void onResume() {
         super.onResume();
@@ -149,6 +152,4 @@ public class LaunchActivity extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-
 }

@@ -49,12 +49,14 @@ public class BeaconRegisterActivity extends AppCompatActivity {
 
     }
 
+    // Saves the beacon onto the database
     private void RegisterNewBeacon(String ID, String Name){
         BeaconEntry newRegister = new BeaconEntry();
 
         newRegister.setBeaconName(Name);
         newRegister.setBeaconID(ID);
 
+        // Does error handling about the beacon existing or not in the database
         if(!dbHelper.addEntry(newRegister)){
             Toast.makeText(getApplicationContext(), "Beacon Already Registered", Toast.LENGTH_SHORT).show();
         }else{

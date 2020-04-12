@@ -1,11 +1,15 @@
 package sc17dpc.individualproject;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +51,7 @@ public class HomeFragment extends Fragment {
         assert getArguments() != null;
         unpack(getArguments());
 
+        // Manages action of changing the name of the user
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,8 +71,22 @@ public class HomeFragment extends Fragment {
         }else{
             setInOffice();
         }
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mStateReceiver, new IntentFilter("ChangeInState"));
         return view;
     }
+
+    // receives information about state change in real time from the EntranceExit algorithm
+    private BroadcastReceiver mStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean address = intent.getBooleanExtra("state", false);
+
+            if(address){ setInOffice();}
+            else{setOutOfOffice();}
+        }
+    };
+
 
     private void unpack(Bundle arguments) {
         try {
@@ -77,21 +96,25 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    // Sets in office
     public void setInOffice(){
         statusImage.setImageResource(R.drawable.ic_in);
         status.setText("Status: In Office");
     }
 
+    // Sets out of office
     public void setOutOfOffice(){
         statusImage.setImageResource(R.drawable.ic_logout);
         status.setText("Status: Not in Office");
     }
 
+    // Fetches current name from the preference file
     private String getCurrentName(){
         String name = pref.getString("name", null);
         return name;
     }
 
+    // Hides the keyboard once the button to update name is pressed
     public static void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);

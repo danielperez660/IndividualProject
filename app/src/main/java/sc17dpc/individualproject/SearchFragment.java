@@ -48,7 +48,7 @@ public class SearchFragment extends Fragment {
         adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, beacons);
         beaconList.setAdapter(adapter);
 
-        // On item selected we will launch a registering window
+        // On item selected we will launch a registering activity
         beaconList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -96,6 +96,7 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
+    // Manages what to do on beacon being found
     private void beaconFound(BeaconEntry beacon) {
         if (!beacons.contains(beacon.getBeaconID())) {
             beaconsFull.add(beacon);
@@ -104,6 +105,7 @@ public class SearchFragment extends Fragment {
         }
     }
 
+    // Observer to our BeaconControllerService to watch for new beacons
     private BroadcastReceiver mBeaconReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -119,12 +121,14 @@ public class SearchFragment extends Fragment {
         }
     };
 
+    // Stops searching on exit of view
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         stopService();
     }
 
+    // Stops the use of the BeaconControllerService
     private void stopService(){
         try{
             getActivity().stopService(intent);
