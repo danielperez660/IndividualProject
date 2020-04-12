@@ -7,6 +7,10 @@ There will be an interaction with a mobile android application which will have a
 If initial interaction between the phone and the beacon is set up then there will be an attempt to interact with the time logging website to log how long the worker has been in the office for.
 
 ## Log
+### 12-04-20
+* made changes to localBroadcastManagers
+* made comments and cleaned up code
+
 ### 02-04-20
 * Added way of identifying who is leaving the office in the text chat of slack
 * Added information storage for preferred map
