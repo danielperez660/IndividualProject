@@ -77,6 +77,8 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 stopService();
+                Toast toast = Toast.makeText(getContext(), "Stopped Searching", Toast.LENGTH_LONG);
+                toast.show();
             }
         });
 

@@ -288,11 +288,20 @@ public class BeaconManagerFragment extends Fragment {
                             ImageView currentBeacon = (ImageView) event.getLocalState();
 
                             if (currentBeacon != null) {
-                                currentBeacon.setY(event.getY());
-                                currentBeacon.setX(event.getX());
+
+                                //Relative changes due to our constraints in the layout
+                                float x = event.getX()-55;
+                                float y = event.getY()+314;
+
+                                Log.d("Debug", "onDrag: " + event.toString() +x +" " + y);
+
+                                currentBeacon.setY(y);
+                                currentBeacon.setX(x);
+
+
                                 for (BeaconIconObject b : beaconIcons) {
                                     if (b.getIcon() == currentBeacon) {
-                                        b.setCoords(event.getX(), event.getY());
+                                        b.setCoords(x, y);
 
                                         // updates database information about icon position
                                         dbHelper.updateIcon(b);
@@ -307,6 +316,8 @@ public class BeaconManagerFragment extends Fragment {
 
                     default:
                         break;
+
+
                 }
                 return true;
             }
