@@ -132,7 +132,7 @@ public class BeaconManagerFragment extends Fragment {
         return view;
     }
 
-    // Does intitial set up of room
+    // Does initial set up of room
     private void checkInitialRoom(String room) {
 
         HashMap<String, Integer> rooms = new HashMap<>();
@@ -202,6 +202,7 @@ public class BeaconManagerFragment extends Fragment {
     }
 
     // Manages the creation and appending of new icon images onto the screen
+    @SuppressLint("ClickableViewAccessibility")
     private void createNewIcon(String id) {
 
         ImageView newImage = new ImageView(getActivity());

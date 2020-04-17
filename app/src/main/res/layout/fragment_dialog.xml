@@ -13,21 +13,21 @@
 
         <Spinner
             android:id="@+id/beacon_option"
-            android:layout_width="304dp"
+            android:layout_width="293dp"
             android:layout_height="48dp"
             android:layout_above="@+id/EntryView"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="148dp"
-            android:layout_marginEnd="43dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/select_button"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/select_button"
