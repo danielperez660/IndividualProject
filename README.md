@@ -7,6 +7,10 @@ There will be an interaction with a mobile android application which will have a
 If initial interaction between the phone and the beacon is set up then there will be an attempt to interact with the time logging website to log how long the worker has been in the office for.
 
 ## Log
+### 17-04-20
+* Finals changes to the UI, project is pretty much complete to a good degree
+* Fixes on issue of constraints and centering of drop downs in modals
+
 ### 12-04-20
 * made changes to localBroadcastManagers
 * made comments and cleaned up code
