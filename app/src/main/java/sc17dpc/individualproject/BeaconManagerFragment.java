@@ -152,7 +152,16 @@ public class BeaconManagerFragment extends Fragment {
             case 111:
                 if (resultCode == Activity.RESULT_OK) {
                     if (data != null) {
-                        createNewIcon(data.getStringExtra("beaconID"));
+                        String beaconId = data.getStringExtra("beaconID");
+
+                        // Ensuring you only put the same beacon in once
+                        for(BeaconIconObject i : beaconIcons){
+                            if(i.getBeacon().getBeaconID().equals(beaconId)){
+                                Toast.makeText(getContext(), "Beacon Already Present on Entrance", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
+                            createNewIcon(beaconId);
                     }
                 }
                 break;
@@ -206,17 +215,16 @@ public class BeaconManagerFragment extends Fragment {
 
         ((ViewGroup) view).addView(newImage);
 
+        // Creating the beaconIconObject and setting params
         BeaconIconObject newIcon = new BeaconIconObject();
-
         for (BeaconEntry b : beacons) {
             if (b.getBeaconID().equals(id)) {
                 newIcon.setBeacon(b);
                 Log.d("Added: ", b.getBeaconID());
             }
         }
-
         newIcon.setIcon(newImage);
-        newIcon.setCoords(newImage.getLeft(), newImage.getTop());
+        newIcon.setCoords(500,745);
 
         beaconIcons.add(newIcon);
         dbHelper.addIconEntry(newIcon);
