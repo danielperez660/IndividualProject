@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class SlackApiObject {
 
-    private final String url = "https://hooks.slack.com/services/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";
+    private final String url = null ;//Removed Token
     private Slack slack = Slack.getInstance();
     private String text;
 
